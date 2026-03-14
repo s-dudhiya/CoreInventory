@@ -8,6 +8,10 @@ import SignupPage from "./pages/SignupPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import OTPVerifyPage from "./pages/OTPVerifyPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import NotFound from "./pages/NotFound";
+import { AppLayout } from "./components/AppLayout";
+import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +28,11 @@ const App = () => (
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/otp-verify" element={<OTPVerifyPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          <Route element={<AppLayout />}>
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>
