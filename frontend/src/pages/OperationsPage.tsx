@@ -47,6 +47,7 @@ export default function OperationsPage() {
     mutationFn: (data: any) => api.post("receipts/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["receipts"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Receipt created");
       setOpen(false);
     }
@@ -56,6 +57,7 @@ export default function OperationsPage() {
     mutationFn: (data: any) => api.post("deliveries/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["deliveries"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Delivery created");
       setOpen(false);
     }
@@ -65,6 +67,7 @@ export default function OperationsPage() {
     mutationFn: (data: any) => api.post("transfers/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transfers"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Transfer created");
       setOpen(false);
     }

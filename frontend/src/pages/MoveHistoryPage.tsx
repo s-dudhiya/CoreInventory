@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { DataTable } from "@/components/DataTable";
-import { StatusBadge } from "@/components/StatusBadge";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Loader2 } from "lucide-react";
@@ -56,7 +55,7 @@ export default function MoveHistoryPage() {
           { key: "type", header: "Type", render: (item) => (
             <span className="inline-flex rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{item.move_type_display}</span>
           )},
-          { key: "status", header: "Status", render: (item) => <StatusBadge status="done" /> },
+          { key: "status", header: "Status", render: () => <span className="text-xs text-success font-medium">Completed</span> },
           { key: "date", header: "Date", render: (item) => <span>{item.created_at?.split('T')[0]}</span> },
         ]}
         data={filtered}

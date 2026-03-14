@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Sum, Count, F
+from django.db.models.functions import Coalesce
 from .serializers import (
     RegisterSerializer,
     RequestOTPResetSerializer,
@@ -98,6 +99,13 @@ class UserProfileView(APIView):
         print("Profile Update Errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all().select_related('profile')
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
 
 class RequestPasswordResetOTPView(APIView):
     permission_classes = [AllowAny]
@@ -171,8 +179,10 @@ class DashboardKPIView(APIView):
         # Top-line KPI Counts
         total_products = Product.objects.count()
         
-        # Calculate exactly how many stocks are < threshold per location
-        low_stock_items = Stock.objects.filter(quantity__lt=threshold).count()
+        # Calculate exactly how many products have total stock < threshold
+        low_stock_items = Product.objects.annotate(
+            total_qty=Coalesce(Sum('stock__quantity'), 0)
+        ).filter(total_qty__lt=threshold).count()
         
         # Pending activity
         pending_receipts = Receipt.objects.exclude(status__in=['done', 'cancel']).count()

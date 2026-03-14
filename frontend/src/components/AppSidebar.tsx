@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -27,8 +26,12 @@ const navItems = [
   { title: "Profile", path: "/profile", icon: User },
 ];
 
-export function AppSidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+interface AppSidebarProps {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}
+
+export function AppSidebar({ collapsed, setCollapsed }: AppSidebarProps) {
   const location = useLocation();
   const { user } = useAuth();
 

@@ -20,6 +20,7 @@ from .views import (
     StockMoveViewSet,
     InventoryAdjustmentViewSet,
     SystemSettingViewSet,
+    UserViewSet,
 )
 
 router = DefaultRouter()
@@ -35,6 +36,7 @@ router.register(r'transfers', InternalTransferViewSet)
 router.register(r'moves', StockMoveViewSet)
 router.register(r'adjustments', InventoryAdjustmentViewSet)
 router.register(r'settings', SystemSettingViewSet, basename='settings')
+router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

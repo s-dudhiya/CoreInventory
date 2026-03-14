@@ -45,6 +45,7 @@ export default function SettingsPage() {
     onSuccess: () => {
       toast.success("Settings saved successfully");
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: () => toast.error("Failed to save settings"),
   });

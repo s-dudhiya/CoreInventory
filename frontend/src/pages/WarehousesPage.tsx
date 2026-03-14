@@ -13,18 +13,21 @@ export default function WarehousesPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", address: "", manager: "" });
 
+  const { data: users = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => (await api.get("users/")).data,
+  });
+
   const { data: warehouses = [], isLoading } = useQuery({
     queryKey: ["warehouses"],
-    queryFn: async () => {
-      const resp = await api.get("warehouses/");
-      return resp.data;
-    },
+    queryFn: async () => (await api.get("warehouses/")).data,
   });
 
   const addMutation = useMutation({
     mutationFn: (newWh: any) => api.post("warehouses/", newWh),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Warehouse added successfully");
       setOpen(false);
       setForm({ name: "", address: "", manager: "" });
@@ -36,6 +39,7 @@ export default function WarehousesPage() {
     mutationFn: (id: number) => api.delete(`warehouses/${id}/`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Warehouse deleted");
     },
     onError: () => toast.error("Failed to delete warehouse"),
@@ -45,13 +49,16 @@ export default function WarehousesPage() {
     e.preventDefault();
     addMutation.mutate({
       ...form,
-      manager: null // Manager selection can be added later as a user dropdown
+      manager: form.manager ? parseInt(form.manager) : null
     });
   };
 
   if (isLoading) {
     return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
+
+  const inputClass = "h-9 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20";
+  const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
 
   return (
     <div className="space-y-6">
@@ -69,25 +76,31 @@ export default function WarehousesPage() {
           <DialogContent>
             <DialogHeader><DialogTitle>Add Warehouse</DialogTitle></DialogHeader>
             <form onSubmit={handleAdd} className="space-y-4">
-              {[
-                { label: "Warehouse Name", key: "name", placeholder: "e.g. Main Warehouse" },
-                { label: "Address", key: "address", placeholder: "e.g. 123 Industrial Ave" },
-                { label: "Manager", key: "manager", placeholder: "e.g. Sarah Chen" },
-              ].map((f) => (
-                <div key={f.key}>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">{f.label}</label>
-                  <input
-                    type="text"
-                    value={form[f.key as keyof typeof form]}
-                    onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                    placeholder={f.placeholder}
-                    className="h-9 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    required
-                  />
-                </div>
-              ))}
-              <button type="submit" className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90">
-                Add Warehouse
+              <div>
+                <label className={labelClass}>Warehouse Name</label>
+                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} className={inputClass} placeholder="e.g. Main Warehouse" required />
+              </div>
+              <div>
+                <label className={labelClass}>Address</label>
+                <input value={form.address} onChange={e => setForm({...form, address: e.target.value})} className={inputClass} placeholder="e.g. 123 Industrial Ave" required />
+              </div>
+              <div>
+                <label className={labelClass}>Manager</label>
+                <select 
+                  value={form.manager} 
+                  onChange={e => setForm({...form, manager: e.target.value})} 
+                  className={inputClass}
+                >
+                  <option value="">Select Manager</option>
+                  {users.map((u: any) => (
+                    <option key={u.id} value={u.id}>
+                      {u.first_name || u.username} {u.last_name || ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button type="submit" disabled={addMutation.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90">
+                {addMutation.isPending ? "Adding..." : "Add Warehouse"}
               </button>
             </form>
           </DialogContent>

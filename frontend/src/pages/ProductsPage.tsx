@@ -85,6 +85,7 @@ export default function ProductsPage() {
     mutationFn: (newProd: any) => api.post("products/", newProd),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Product added successfully");
       setOpen(false);
       setForm({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
@@ -96,6 +97,7 @@ export default function ProductsPage() {
     mutationFn: (id: number) => api.delete(`products/${id}/`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Product deleted");
     },
     onError: () => toast.error("Failed to delete product"),
@@ -105,6 +107,7 @@ export default function ProductsPage() {
     mutationFn: ({ id, data }: { id: number, data: any }) => api.patch(`products/${id}/`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Product updated");
       setEditOpen(false);
     },

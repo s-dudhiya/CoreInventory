@@ -26,6 +26,7 @@ export default function AdjustmentsPage() {
     mutationFn: (data: any) => api.post("adjustments/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adjustments"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Adjustment applied");
       setOpen(false);
       setForm({ product: "", location: "", recorded_quantity: "", counted_quantity: "", reason: "" });
