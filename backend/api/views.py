@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
@@ -23,8 +24,8 @@ from .serializers import (
     SystemSettingSerializer
 )
 from .models import (
-    OTP, generate_otp, Product, Receipt, 
-    DeliveryOrder, InternalTransfer, Stock, Warehouse, StockMove,
+    OTP, generate_otp, Product, Receipt, ReceiptItem,
+    DeliveryOrder, DeliveryItem, InternalTransfer, TransferItem, Stock, Warehouse, StockMove,
     Category, UnitOfMeasure, Location, Supplier, InventoryAdjustment,
     SystemSetting
 )
@@ -83,6 +84,27 @@ class LogoutView(APIView):
         response.delete_cookie('access_token', path='/')
         response.delete_cookie('refresh_token', path='/')
         return response
+
+class CookieTokenRefreshView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        refresh_token = request.COOKIES.get('refresh_token')
+        if not refresh_token:
+            return Response({"error": "No refresh token provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            refresh = RefreshToken(refresh_token)
+            user_id = refresh.payload.get('user_id')
+            user = User.objects.get(id=user_id)
+            
+            response = Response({"message": "Token refreshed"}, status=status.HTTP_200_OK)
+            return set_jwt_cookies(response, user)
+        except (TokenError, InvalidToken, User.DoesNotExist) as e:
+            response = Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+            response.delete_cookie('access_token', path='/')
+            response.delete_cookie('refresh_token', path='/')
+            return response
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -272,8 +294,15 @@ class ProductViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         with transaction.atomic():
             product = serializer.save()
-            # Sync initial_stock to a default location if exists
-            location = Location.objects.first()
+            # Sync initial_stock to specific location if provided, else first location
+            location_id = self.request.data.get('location')
+            location = None
+            if location_id:
+                location = Location.objects.filter(id=location_id).first()
+            
+            if not location:
+                location = Location.objects.first()
+
             if location:
                 Stock.objects.update_or_create(
                     product=product,
@@ -284,15 +313,41 @@ class ProductViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         with transaction.atomic():
             product = serializer.save()
-            # Sync initial_stock to the FIRST associated stock record or default location
-            stock_record = Stock.objects.filter(product=product).first()
-            if not stock_record:
-                location = Location.objects.first()
-                if location:
-                    Stock.objects.create(product=product, location=location, quantity=product.initial_stock)
+            location_id = self.request.data.get('location')
+            
+            # If location_id is provided, we want to ensure the product's primary stock 
+            # (usually the only one for basic users) is at that location.
+            if location_id:
+                new_location = get_object_or_404(Location, id=location_id)
+                
+                # Get existing stock record (assuming 1-to-1 for now or picking first)
+                current_stock = Stock.objects.filter(product=product).first()
+                if current_stock:
+                    if current_stock.location != new_location:
+                        # Move existing stock record to new location
+                        # Check if a record already exists at the new location
+                        target_stock = Stock.objects.filter(product=product, location=new_location).first()
+                        if target_stock:
+                            # Merge quantity if it exists, or just update primary
+                            target_stock.quantity = product.initial_stock
+                            target_stock.save()
+                            current_stock.delete()
+                        else:
+                            current_stock.location = new_location
+                            current_stock.quantity = product.initial_stock
+                            current_stock.save()
+                    else:
+                        current_stock.quantity = product.initial_stock
+                        current_stock.save()
+                else:
+                    # Create new stock if none exists
+                    Stock.objects.create(product=product, location=new_location, quantity=product.initial_stock)
             else:
-                stock_record.quantity = product.initial_stock
-                stock_record.save()
+                # Fallback to current sync logic if no location provided
+                stock_record = Stock.objects.filter(product=product).first()
+                if stock_record:
+                    stock_record.quantity = product.initial_stock
+                    stock_record.save()
 
     @action(detail=False, methods=['get'])
     def suggest_sku(self, request):
@@ -323,7 +378,15 @@ class ReceiptViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        with transaction.atomic():
+            receipt = serializer.save(created_by=self.request.user)
+            items_data = self.request.data.get('items', [])
+            for item in items_data:
+                ReceiptItem.objects.create(
+                    receipt=receipt,
+                    product_id=item.get('product'),
+                    quantity=item.get('quantity', 0)
+                )
 
     @action(detail=True, methods=['post'])
     def finalize(self, request, pk=None):
@@ -366,7 +429,15 @@ class DeliveryOrderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        with transaction.atomic():
+            delivery = serializer.save(created_by=self.request.user)
+            items_data = self.request.data.get('items', [])
+            for item in items_data:
+                DeliveryItem.objects.create(
+                    delivery=delivery,
+                    product_id=item.get('product'),
+                    quantity=item.get('quantity', 0)
+                )
 
     @action(detail=True, methods=['post'])
     def finalize(self, request, pk=None):
@@ -409,7 +480,15 @@ class InternalTransferViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        with transaction.atomic():
+            transfer = serializer.save(created_by=self.request.user)
+            items_data = self.request.data.get('items', [])
+            for item in items_data:
+                TransferItem.objects.create(
+                    transfer=transfer,
+                    product_id=item.get('product'),
+                    quantity=item.get('quantity', 0)
+                )
 
     @action(detail=True, methods=['post'])
     def finalize(self, request, pk=None):
@@ -463,7 +542,26 @@ class InventoryAdjustmentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(adjusted_by=self.request.user)
+        with transaction.atomic():
+            adjustment = serializer.save(adjusted_by=self.request.user)
+            
+            stock, created = Stock.objects.get_or_create(
+                product=adjustment.product,
+                location=adjustment.location,
+                defaults={'quantity': 0}
+            )
+            
+            difference = adjustment.counted_quantity - adjustment.recorded_quantity
+            stock.quantity = adjustment.counted_quantity
+            stock.save()
+            
+            StockMove.objects.create(
+                product=adjustment.product,
+                location=adjustment.location,
+                quantity_change=difference,
+                move_type='adjustment',
+                reference_id=str(adjustment.id)
+            )
 
 class SystemSettingViewSet(viewsets.ModelViewSet):
     queryset = SystemSetting.objects.all()

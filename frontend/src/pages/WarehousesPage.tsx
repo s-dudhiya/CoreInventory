@@ -11,7 +11,10 @@ export default function WarehousesPage() {
   const queryClient = useQueryClient();
   const { searchQuery } = useSearch();
   const [open, setOpen] = useState(false);
+  const [zonesOpen, setZonesOpen] = useState(false);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<any>(null);
   const [form, setForm] = useState({ name: "", address: "", manager: "" });
+  const [zoneForm, setZoneForm] = useState({ name: "" });
 
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
@@ -22,6 +25,13 @@ export default function WarehousesPage() {
     queryKey: ["warehouses"],
     queryFn: async () => (await api.get("warehouses/")).data,
   });
+
+  const { data: locations = [], refetch: refetchLocations } = useQuery({
+    queryKey: ["all-locations"],
+    queryFn: async () => (await api.get("locations/")).data,
+  });
+
+  const warehouseLocations = locations.filter((l: any) => l.warehouse === selectedWarehouse?.id);
 
   const addMutation = useMutation({
     mutationFn: (newWh: any) => api.post("warehouses/", newWh),
@@ -50,6 +60,36 @@ export default function WarehousesPage() {
     addMutation.mutate({
       ...form,
       manager: form.manager ? parseInt(form.manager) : null
+    });
+  };
+
+  const addZoneMutation = useMutation({
+    mutationFn: (newZone: any) => api.post("locations/", newZone),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all-locations"] });
+      queryClient.invalidateQueries({ queryKey: ["warehouses"] });
+      toast.success("Zone added successfully");
+      setZoneForm({ name: "" });
+    },
+    onError: () => toast.error("Failed to add zone"),
+  });
+
+  const deleteZoneMutation = useMutation({
+    mutationFn: (id: number) => api.delete(`locations/${id}/`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all-locations"] });
+      queryClient.invalidateQueries({ queryKey: ["warehouses"] });
+      toast.success("Zone deleted");
+    },
+    onError: () => toast.error("Failed to delete zone"),
+  });
+
+  const handleAddZone = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedWarehouse) return;
+    addZoneMutation.mutate({
+      ...zoneForm,
+      warehouse: selectedWarehouse.id
     });
   };
 
@@ -137,13 +177,63 @@ export default function WarehousesPage() {
             </div>
           )},
           { key: "actions", header: "", render: (item) => (
-            <button onClick={() => deleteMutation.mutate(item.id)} className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
-              <Trash2 className="h-4 w-4" />
-            </button>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => { setSelectedWarehouse(item); setZonesOpen(true); }} 
+                className="rounded p-1.5 text-primary hover:bg-primary/10 transition-colors text-xs font-semibold"
+              >
+                Manage Zones
+              </button>
+              <button onClick={() => deleteMutation.mutate(item.id)} className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
           )},
         ]}
         data={filteredWarehouses}
       />
+      <Dialog open={zonesOpen} onOpenChange={setZonesOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader><DialogTitle>Zones for {selectedWarehouse?.name}</DialogTitle></DialogHeader>
+          <div className="space-y-4">
+            <form onSubmit={handleAddZone} className="flex gap-2">
+              <input 
+                value={zoneForm.name} 
+                onChange={e => setZoneForm({ name: e.target.value })} 
+                className={inputClass} 
+                placeholder="Zone Name (e.g. Rack A1)" 
+                required 
+              />
+              <button 
+                type="submit" 
+                disabled={addZoneMutation.isPending}
+                className="rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground"
+              >
+                Add
+              </button>
+            </form>
+            
+            <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto">
+              {warehouseLocations.length === 0 ? (
+                <p className="text-center text-sm text-muted-foreground py-4">No zones defined yet.</p>
+              ) : (
+                warehouseLocations.map((loc: any) => (
+                  <div key={loc.id} className="flex items-center justify-between rounded-lg border border-border p-3 bg-muted/30">
+                    <span className="text-sm font-medium">{loc.name}</span>
+                    <button 
+                      onClick={() => deleteZoneMutation.mutate(loc.id)}
+                      disabled={deleteZoneMutation.isPending}
+                      className="text-destructive hover:bg-destructive/10 p-1.5 rounded transition-colors"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -18,9 +18,9 @@ export default function OperationsPage() {
   const [open, setOpen] = useState(false);
 
   // Forms
-  const [receiptForm, setReceiptForm] = useState({ supplier: "", warehouse: "", status: "draft" as Status });
-  const [deliveryForm, setDeliveryForm] = useState({ customer_name: "", warehouse: "", status: "draft" as Status });
-  const [transferForm, setTransferForm] = useState({ from_location: "", to_location: "", status: "draft" as Status });
+  const [receiptForm, setReceiptForm] = useState({ supplier: "", warehouse: "", product: "", quantity: "", status: "draft" as Status });
+  const [deliveryForm, setDeliveryForm] = useState({ customer_name: "", warehouse: "", product: "", quantity: "", status: "draft" as Status });
+  const [transferForm, setTransferForm] = useState({ from_location: "", to_location: "", product: "", quantity: "", status: "draft" as Status });
 
   // Data Fetching
   const { data: receipts = [], isLoading: isLoadingReceipts } = useQuery({
@@ -41,6 +41,7 @@ export default function OperationsPage() {
   const { data: suppliers = [] } = useQuery({ queryKey: ["suppliers"], queryFn: async () => (await api.get("suppliers/")).data });
   const { data: warehouses = [] } = useQuery({ queryKey: ["warehouses"], queryFn: async () => (await api.get("warehouses/")).data });
   const { data: locations = [] } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("locations/")).data });
+  const { data: products = [] } = useQuery({ queryKey: ["products"], queryFn: async () => (await api.get("products/")).data });
 
   // Mutations
   const createReceipt = useMutation({
@@ -99,7 +100,8 @@ export default function OperationsPage() {
     createReceipt.mutate({
       ...receiptForm,
       supplier: parseInt(receiptForm.supplier),
-      warehouse: parseInt(receiptForm.warehouse)
+      warehouse: parseInt(receiptForm.warehouse),
+      items: [{ product: parseInt(receiptForm.product), quantity: parseInt(receiptForm.quantity) }]
     });
   };
 
@@ -107,7 +109,8 @@ export default function OperationsPage() {
     e.preventDefault();
     createDelivery.mutate({
       ...deliveryForm,
-      warehouse: parseInt(deliveryForm.warehouse)
+      warehouse: parseInt(deliveryForm.warehouse),
+      items: [{ product: parseInt(deliveryForm.product), quantity: parseInt(deliveryForm.quantity) }]
     });
   };
 
@@ -116,7 +119,8 @@ export default function OperationsPage() {
     createTransfer.mutate({
       ...transferForm,
       from_location: parseInt(transferForm.from_location),
-      to_location: parseInt(transferForm.to_location)
+      to_location: parseInt(transferForm.to_location),
+      items: [{ product: parseInt(transferForm.product), quantity: parseInt(transferForm.quantity) }]
     });
   };
 
@@ -147,6 +151,10 @@ export default function OperationsPage() {
         <form onSubmit={handleAddReceipt} className="space-y-4">
           <div><label className={labelClass}>Supplier</label><select className={selectClass} value={receiptForm.supplier} onChange={e => setReceiptForm({...receiptForm, supplier: e.target.value})} required><option value="">Select Supplier</option>{suppliers.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></div>
           <div><label className={labelClass}>Destination Warehouse</label><select className={selectClass} value={receiptForm.warehouse} onChange={e => setReceiptForm({...receiptForm, warehouse: e.target.value})} required><option value="">Select Warehouse</option>{warehouses.map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}</select></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className={labelClass}>Product</label><select className={selectClass} value={receiptForm.product} onChange={e => setReceiptForm({...receiptForm, product: e.target.value})} required><option value="">Select Product</option>{products.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+            <div><label className={labelClass}>Quantity</label><input type="number" min="1" className={inputClass} value={receiptForm.quantity} onChange={e => setReceiptForm({...receiptForm, quantity: e.target.value})} required /></div>
+          </div>
           <button type="submit" disabled={createReceipt.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
             {createReceipt.isPending ? "Creating..." : "Create Receipt"}
           </button>
@@ -158,6 +166,10 @@ export default function OperationsPage() {
         <form onSubmit={handleAddDelivery} className="space-y-4">
           <div><label className={labelClass}>Customer Name</label><input className={inputClass} value={deliveryForm.customer_name} onChange={e => setDeliveryForm({ ...deliveryForm, customer_name: e.target.value })} placeholder="e.g. TechCorp" required /></div>
           <div><label className={labelClass}>Source Warehouse</label><select className={selectClass} value={deliveryForm.warehouse} onChange={e => setDeliveryForm({ ...deliveryForm, warehouse: e.target.value })} required><option value="">Select Warehouse</option>{warehouses.map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}</select></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className={labelClass}>Product</label><select className={selectClass} value={deliveryForm.product} onChange={e => setDeliveryForm({...deliveryForm, product: e.target.value})} required><option value="">Select Product</option>{products.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+            <div><label className={labelClass}>Quantity</label><input type="number" min="1" className={inputClass} value={deliveryForm.quantity} onChange={e => setDeliveryForm({...deliveryForm, quantity: e.target.value})} required /></div>
+          </div>
           <button type="submit" disabled={createDelivery.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
             {createDelivery.isPending ? "Creating..." : "Create Delivery"}
           </button>
@@ -169,6 +181,10 @@ export default function OperationsPage() {
         <div className="grid grid-cols-2 gap-4">
           <div><label className={labelClass}>From Location</label><select className={selectClass} value={transferForm.from_location} onChange={e => setTransferForm({ ...transferForm, from_location: e.target.value })} required><option value="">Select Location</option>{locations.map((l: any) => <option key={l.id} value={l.id}>{l.name}</option>)}</select></div>
           <div><label className={labelClass}>To Location</label><select className={selectClass} value={transferForm.to_location} onChange={e => setTransferForm({ ...transferForm, to_location: e.target.value })} required><option value="">Select Location</option>{locations.map((l: any) => <option key={l.id} value={l.id}>{l.name}</option>)}</select></div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div><label className={labelClass}>Product</label><select className={selectClass} value={transferForm.product} onChange={e => setTransferForm({...transferForm, product: e.target.value})} required><option value="">Select Product</option>{products.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+          <div><label className={labelClass}>Quantity</label><input type="number" min="1" className={inputClass} value={transferForm.quantity} onChange={e => setTransferForm({...transferForm, quantity: e.target.value})} required /></div>
         </div>
         <button type="submit" disabled={createTransfer.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
           {createTransfer.isPending ? "Creating..." : "Create Transfer"}
@@ -235,7 +251,11 @@ export default function OperationsPage() {
               { key: "id", header: "Receipt ID", render: (item) => <span className="font-mono text-xs tabular-nums text-muted-foreground">REC-{item.id.toString().padStart(3, '0')}</span> },
               { key: "supplier", header: "Supplier", render: (item) => <span>{item.supplier_name}</span> },
               { key: "warehouse", header: "Warehouse", render: (item) => <span>{item.warehouse_name}</span> },
-              { key: "items", header: "Items", render: (item) => <span className="text-xs text-muted-foreground">{item.items?.length || 0} items</span> },
+              { key: "items", header: "Items", render: (item) => (
+                <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
+                  {item.items?.length > 0 ? item.items.map((it: any, i: number) => <span key={i}>{it.product_name}: {it.quantity}</span>) : "No items"}
+                </div>
+              )},
               { key: "status", header: "Status", render: (item) => <StatusBadge status={item.status} /> },
               { key: "date", header: "Date", render: (item) => <span>{item.created_at?.split('T')[0]}</span> },
               { key: "actions", header: "", render: (item) => renderActions("receipts", item) },
@@ -250,7 +270,11 @@ export default function OperationsPage() {
               { key: "id", header: "Order ID", render: (item) => <span className="font-mono text-xs tabular-nums text-muted-foreground">DEL-{item.id.toString().padStart(3, '0')}</span> },
               { key: "customer", header: "Customer", render: (item) => <span>{item.customer_name}</span> },
               { key: "warehouse", header: "Warehouse", render: (item) => <span>{item.warehouse_name}</span> },
-              { key: "items", header: "Items", render: (item) => <span className="text-xs text-muted-foreground">{item.items?.length || 0} items</span> },
+              { key: "items", header: "Items", render: (item) => (
+                <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
+                  {item.items?.length > 0 ? item.items.map((it: any, i: number) => <span key={i}>{it.product_name}: {it.quantity}</span>) : "No items"}
+                </div>
+              )},
               { key: "status", header: "Status", render: (item) => <StatusBadge status={item.status} /> },
               { key: "date", header: "Date", render: (item) => <span>{item.created_at?.split('T')[0]}</span> },
               { key: "actions", header: "", render: (item) => renderActions("deliveries", item) },
@@ -265,7 +289,11 @@ export default function OperationsPage() {
               { key: "id", header: "Transfer ID", render: (item) => <span className="font-mono text-xs tabular-nums text-muted-foreground">TRF-{item.id.toString().padStart(3, '0')}</span> },
               { key: "from", header: "From", render: (item) => <span>{item.from_location_name}</span> },
               { key: "to", header: "To", render: (item) => <span>{item.to_location_name}</span> },
-              { key: "items", header: "Items", render: (item) => <span className="text-xs text-muted-foreground">{item.items?.length || 0} items</span> },
+              { key: "items", header: "Items", render: (item) => (
+                <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
+                  {item.items?.length > 0 ? item.items.map((it: any, i: number) => <span key={i}>{it.product_name}: {it.quantity}</span>) : "No items"}
+                </div>
+              )},
               { key: "status", header: "Status", render: (item) => <StatusBadge status={item.status} /> },
               { key: "date", header: "Date", render: (item) => <span>{item.created_at?.split('T')[0]}</span> },
               { key: "actions", header: "", render: (item) => renderActions("transfers", item) },

@@ -42,6 +42,8 @@ export default function AdjustmentsPage() {
     e.preventDefault();
     addMutation.mutate({
       ...form,
+      product: parseInt(form.product),
+      location: parseInt(form.location),
       recorded_quantity: Number(form.recorded_quantity),
       counted_quantity: Number(form.counted_quantity),
     });

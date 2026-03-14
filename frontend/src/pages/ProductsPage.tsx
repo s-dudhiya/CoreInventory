@@ -54,8 +54,8 @@ export default function ProductsPage() {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
-  const [editForm, setEditForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
+  const [form, setForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0", location: "" });
+  const [editForm, setEditForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0", location: "" });
 
   // Data Fetching
   const { data: products = [], isLoading } = useQuery({
@@ -82,6 +82,11 @@ export default function ProductsPage() {
     },
   });
 
+  const { data: locations = [] } = useQuery({
+    queryKey: ["locations"],
+    queryFn: async () => (await api.get("locations/")).data,
+  });
+
   const { data: skuSuggestion } = useQuery({
     queryKey: ["sku-suggestion"],
     queryFn: async () => (await api.get("products/suggest_sku/")).data,
@@ -103,7 +108,7 @@ export default function ProductsPage() {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Product added successfully");
       setOpen(false);
-      setForm({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
+      setForm({ name: "", sku: "", category: "", unit: "", initial_stock: "0", location: "" });
     },
     onError: () => toast.error("Failed to add product"),
   });
@@ -135,18 +140,20 @@ export default function ProductsPage() {
       ...form,
       category: form.category ? parseInt(form.category) : null,
       unit: form.unit ? parseInt(form.unit) : null,
-      initial_stock: parseInt(form.initial_stock)
+      initial_stock: parseInt(form.initial_stock),
+      location: form.location ? parseInt(form.location) : null
     });
   };
 
   const handleEdit = (item: any) => {
     setEditId(item.id);
-    setEditForm({ 
-      name: item.name, 
-      sku: item.sku, 
-      category: item.category?.toString() || "", 
-      unit: item.unit?.toString() || "",
-      initial_stock: item.initial_stock?.toString() || "0"
+    setEditForm({
+      name: item.name,
+      sku: item.sku,
+      category: item.category ? String(item.category) : "",
+      unit: item.unit ? String(item.unit) : "",
+      initial_stock: String(item.initial_stock || 0),
+      location: item.stocks?.[0]?.location ? String(item.stocks[0].location) : ""
     });
     setEditOpen(true);
   };
@@ -154,15 +161,16 @@ export default function ProductsPage() {
   const handleEditSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (editId) {
-      updateMutation.mutate({ 
-        id: editId, 
-        data: {
-          ...editForm,
-          category: editForm.category ? parseInt(editForm.category) : null,
-          unit: editForm.unit ? parseInt(editForm.unit) : null,
-          initial_stock: parseInt(editForm.initial_stock)
-        } 
-      });
+      updateMutation.mutate({
+      id: editId,
+      data: {
+        ...editForm,
+        category: editForm.category ? parseInt(editForm.category) : null,
+        unit: editForm.unit ? parseInt(editForm.unit) : null,
+        initial_stock: parseInt(editForm.initial_stock),
+        location: editForm.location ? parseInt(editForm.location) : null
+      }
+    });
     }
   };
 
@@ -178,7 +186,7 @@ export default function ProductsPage() {
     queryFn: () => api.get("settings/").then((res) => res.data),
   });
 
-  const threshold = settings?.low_stock_threshold || 15;
+  const threshold = Number(settings?.low_stock_threshold || 15);
 
   // Search filtering
   const filteredProducts = products.filter((p: any) => 
@@ -232,7 +240,26 @@ export default function ProductsPage() {
               </div>
               <div>
                 <label className={labelClass}>Initial Stock</label>
-                <input type="number" value={form.initial_stock} onChange={e => setForm({...form, initial_stock: e.target.value})} className={inputClass} />
+                <div className="grid grid-cols-2 gap-4">
+                  <input type="number" value={form.initial_stock} onChange={e => setForm({...form, initial_stock: e.target.value})} className={inputClass} placeholder="Quantity" />
+                  <select value={form.location} onChange={e => setForm({...form, location: e.target.value})} className={inputClass}>
+                    <option value="">Default Location</option>
+                    {(() => {
+                      const groups: Record<string, any[]> = {};
+                      locations.forEach((l: any) => {
+                        if (!groups[l.warehouse_name]) groups[l.warehouse_name] = [];
+                        groups[l.warehouse_name].push(l);
+                      });
+                      return Object.entries(groups).map(([wName, locs]) => (
+                        <optgroup key={wName} label={wName}>
+                          {locs.map((l: any) => (
+                            <option key={l.id} value={l.id}>{l.name}</option>
+                          ))}
+                        </optgroup>
+                      ));
+                    })()}
+                  </select>
+                </div>
               </div>
               <button type="submit" disabled={addMutation.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
                 {addMutation.isPending ? "Adding..." : "Add Product"}
@@ -271,7 +298,26 @@ export default function ProductsPage() {
             </div>
             <div>
               <label className={labelClass}>Initial Stock</label>
-              <input type="number" value={editForm.initial_stock} onChange={e => setEditForm({...editForm, initial_stock: e.target.value})} className={inputClass} />
+              <div className="grid grid-cols-2 gap-4">
+                <input type="number" value={editForm.initial_stock} onChange={e => setEditForm({...editForm, initial_stock: e.target.value})} className={inputClass} placeholder="Quantity" />
+                <select value={editForm.location} onChange={e => setEditForm({...editForm, location: e.target.value})} className={inputClass}>
+                  <option value="">Default Location</option>
+                  {(() => {
+                    const groups: Record<string, any[]> = {};
+                    locations.forEach((l: any) => {
+                      if (!groups[l.warehouse_name]) groups[l.warehouse_name] = [];
+                      groups[l.warehouse_name].push(l);
+                    });
+                    return Object.entries(groups).map(([wName, locs]) => (
+                      <optgroup key={wName} label={wName}>
+                        {locs.map((l: any) => (
+                          <option key={l.id} value={l.id}>{l.name}</option>
+                        ))}
+                      </optgroup>
+                    ));
+                  })()}
+                </select>
+              </div>
             </div>
             <button type="submit" disabled={updateMutation.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
               {updateMutation.isPending ? "Saving..." : "Save Changes"}
@@ -292,9 +338,9 @@ export default function ProductsPage() {
           { key: "uom", header: "UoM", render: (item) => (
             <span className="text-sm">{item.unit_name || "N/A"}</span>
           )},
-          { key: "stock", header: "Total Stock", render: (item) => (
-            <span className={item.total_stock < threshold ? "text-destructive font-medium" : ""}>
-              {item.total_stock.toLocaleString()}
+          { key: "stock", header: "Stock", render: (item) => (
+            <span className={item.initial_stock < threshold ? "bg-destructive/20 text-destructive font-semibold px-2 py-1 rounded-md border border-destructive/30" : ""}>
+              <InlineEditCell value={item.initial_stock} onSave={(v) => updateInlineField(item.id, "initial_stock", v)} type="number" />
             </span>
           )},
           { key: "location", header: "Locations", render: (item) => (

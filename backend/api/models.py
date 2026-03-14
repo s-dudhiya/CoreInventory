@@ -63,6 +63,11 @@ class Warehouse(models.Model):
     def __str__(self):
         return self.name
 
+@receiver(post_save, sender=Warehouse)
+def create_default_location(sender, instance, created, **kwargs):
+    if created:
+        Location.objects.get_or_create(warehouse=instance, name="Main")
+
 
 # -----------------------------
 # LOCATION / RACK
@@ -247,7 +252,7 @@ class StockMove(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     quantity_change = models.IntegerField()
     move_type = models.CharField(max_length=20, choices=MOVE_TYPES)
-    reference_id = models.IntegerField(blank=True, null=True)
+    reference_id = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
