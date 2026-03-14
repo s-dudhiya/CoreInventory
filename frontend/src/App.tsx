@@ -12,6 +12,12 @@ import NotFound from "./pages/NotFound";
 import { AppLayout } from "./components/AppLayout";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProductsPage from "./pages/ProductsPage";
+import OperationsPage from "./pages/OperationsPage";
+import WarehousesPage from "./pages/WarehousesPage";
+import AdjustmentsPage from "./pages/AdjustmentsPage";
+import MoveHistoryPage from "./pages/MoveHistoryPage";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +36,12 @@ const App = () => (
           <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/operations" element={<OperationsPage />} />
+            <Route path="/warehouses" element={<WarehousesPage />} />
+            <Route path="/adjustments" element={<AdjustmentsPage />} />
+            <Route path="/moves" element={<MoveHistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
