@@ -72,12 +72,13 @@ class LoginView(APIView):
         return Response({"error": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token')
-        response.delete_cookie('refresh_token')
+        # Clear cookies by setting them to empty and expired
+        response.delete_cookie('access_token', path='/')
+        response.delete_cookie('refresh_token', path='/')
         return response
 
 class UserProfileView(APIView):

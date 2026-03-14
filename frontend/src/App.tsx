@@ -37,6 +37,20 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 function RoleRoute({ allowedRoles, children }: { allowedRoles: string[], children: React.ReactNode }) {
   const { user } = useAuth();
   
@@ -56,11 +70,11 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/otp-verify" element={<OTPVerifyPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+          <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+          <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+          <Route path="/otp-verify" element={<PublicRoute><OTPVerifyPage /></PublicRoute>} />
+          <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
 
           <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
             <Route path="/dashboard" element={<DashboardPage />} />
