@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DataTable } from "@/components/DataTable";
+import { getTotalStock, isLowStock } from "@/lib/stock";
 
 export default function SettingsPage() {
   const queryClient = useQueryClient();
@@ -27,6 +29,11 @@ export default function SettingsPage() {
   const { data: units } = useQuery({
     queryKey: ["units"],
     queryFn: () => api.get("units/").then((res) => res.data),
+  });
+
+  const { data: products = [], isLoading: productsLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => (await api.get("products/")).data,
   });
 
   useEffect(() => {
@@ -152,6 +159,46 @@ export default function SettingsPage() {
               />
               Require approval for adjustments
             </label>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Low Stock Preview</h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Highlights products where total stock is below the current threshold ({Number(form.low_stock_threshold || 0).toLocaleString()})
+              </p>
+            </div>
+            <span className="rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-semibold text-destructive ring-1 ring-inset ring-destructive/20">
+              {(products || []).filter((p) => isLowStock(p, Number(form.low_stock_threshold || 0))).length} Below
+            </span>
+          </div>
+
+          <div className="mt-4">
+            <DataTable
+              columns={[
+                { key: "name", header: "Product", render: (item) => <span className="font-medium">{item.name}</span> },
+                { key: "sku", header: "SKU", render: (item) => <span className="tabular-nums text-muted-foreground font-mono text-xs">{item.sku}</span> },
+                { key: "total_stock", header: "Total Stock", render: (item) => {
+                  const total = getTotalStock(item);
+                  return <span className="tabular-nums">{total.toLocaleString()}</span>;
+                }},
+                { key: "gap", header: "Below By", render: (item) => {
+                  const threshold = Number(form.low_stock_threshold || 0);
+                  const diff = Math.max(0, threshold - getTotalStock(item));
+                  return <span className="tabular-nums text-destructive font-semibold">{diff.toLocaleString()}</span>;
+                }},
+              ]}
+              data={(products || [])
+                .filter((p) => isLowStock(p, Number(form.low_stock_threshold || 0)))
+                .sort((a, b) => getTotalStock(a) - getTotalStock(b))
+                .slice(0, 10)}
+              rowClassName={(item) => isLowStock(item, Number(form.low_stock_threshold || 0)) ? "bg-destructive/15 even:bg-destructive/15 hover:bg-destructive/20 text-destructive border-l-4 border-l-destructive ring-1 ring-inset ring-destructive/20" : ""}
+            />
+            {productsLoading && (
+              <div className="mt-3 text-xs text-muted-foreground">Loading products…</div>
+            )}
           </div>
         </div>
       </div>
