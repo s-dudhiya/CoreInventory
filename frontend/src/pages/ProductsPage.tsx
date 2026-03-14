@@ -153,6 +153,13 @@ export default function ProductsPage() {
   const inputClass = "h-9 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20";
   const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
 
+  const { data: settings } = useQuery({
+    queryKey: ["settings"],
+    queryFn: () => api.get("settings/").then((res) => res.data),
+  });
+
+  const threshold = settings?.low_stock_threshold || 15;
+
   // View logic
   if (isLoading) {
     return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -255,7 +262,7 @@ export default function ProductsPage() {
             <span className="text-sm">{item.unit_name || "N/A"}</span>
           )},
           { key: "stock", header: "Total Stock", render: (item) => (
-            <span className={item.total_stock < 15 ? "text-destructive font-medium" : ""}>
+            <span className={item.total_stock < threshold ? "text-destructive font-medium" : ""}>
               {item.total_stock.toLocaleString()}
             </span>
           )},

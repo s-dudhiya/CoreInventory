@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
-  const { user, login } = useAuth();
+  const { user, login, logout } = useAuth();
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     full_name: user ? `${user.first_name} ${user.last_name}`.trim() : "",
@@ -105,14 +105,22 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <button 
-          onClick={handleUpdate}
-          disabled={updateMutation.isPending}
-          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50"
-        >
-          {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Update Profile
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={handleUpdate}
+            disabled={updateMutation.isPending}
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50"
+          >
+            {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            Update Profile
+          </button>
+          <button 
+            onClick={logout}
+            className="flex items-center gap-2 rounded-lg border border-destructive bg-destructive/10 px-4 py-2 text-sm font-semibold text-destructive shadow-sm hover:bg-destructive hover:text-destructive-foreground active:scale-[0.98] transition-all"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

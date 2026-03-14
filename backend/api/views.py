@@ -164,11 +164,15 @@ class DashboardKPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        # Get settings for low stock threshold
+        settings = SystemSetting.objects.first()
+        threshold = settings.low_stock_threshold if settings else 15
+
         # Top-line KPI Counts
         total_products = Product.objects.count()
         
-        # Calculate exactly how many stocks are < 15 per location
-        low_stock_items = Stock.objects.filter(quantity__lt=15).count()
+        # Calculate exactly how many stocks are < threshold per location
+        low_stock_items = Stock.objects.filter(quantity__lt=threshold).count()
         
         # Pending activity
         pending_receipts = Receipt.objects.exclude(status__in=['done', 'cancel']).count()
