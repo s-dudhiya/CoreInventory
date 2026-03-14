@@ -269,6 +269,31 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        with transaction.atomic():
+            product = serializer.save()
+            # Sync initial_stock to a default location if exists
+            location = Location.objects.first()
+            if location:
+                Stock.objects.update_or_create(
+                    product=product,
+                    location=location,
+                    defaults={'quantity': product.initial_stock}
+                )
+
+    def perform_update(self, serializer):
+        with transaction.atomic():
+            product = serializer.save()
+            # Sync initial_stock to the FIRST associated stock record or default location
+            stock_record = Stock.objects.filter(product=product).first()
+            if not stock_record:
+                location = Location.objects.first()
+                if location:
+                    Stock.objects.create(product=product, location=location, quantity=product.initial_stock)
+            else:
+                stock_record.quantity = product.initial_stock
+                stock_record.save()
+
     @action(detail=False, methods=['get'])
     def suggest_sku(self, request):
         last_item = Product.objects.all().order_by('id').last()
