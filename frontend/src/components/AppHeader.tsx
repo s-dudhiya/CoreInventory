@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Bell, ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
+import { useSearch } from "@/lib/SearchContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ breadcrumbs }: AppHeaderProps) {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
+  const { searchQuery, setSearchQuery } = useSearch();
   const { user, logout } = useAuth();
 
   const handleLogout = async () => {
@@ -51,8 +51,8 @@ export function AppHeader({ breadcrumbs }: AppHeaderProps) {
           <input
             type="text"
             placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="h-9 w-64 rounded-lg border border-border bg-card pl-9 pr-3 text-sm shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>

@@ -5,12 +5,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useSearch } from "@/lib/SearchContext";
 
 // Mock data removed
 
 
 export default function AdjustmentsPage() {
   const queryClient = useQueryClient();
+  const { searchQuery } = useSearch();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ product: "", location: "", recorded_quantity: "", counted_quantity: "", reason: "" });
 
@@ -19,8 +21,8 @@ export default function AdjustmentsPage() {
     queryFn: async () => (await api.get("adjustments/")).data,
   });
 
-  const { data: products = [] } = useQuery({ queryKey: ["products"], queryFn: async () => (await api.get("products/")).data });
-  const { data: locations = [] } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("locations/")).data });
+  const { data: products = [], isLoading: loadingProds } = useQuery({ queryKey: ["products"], queryFn: async () => (await api.get("products/")).data });
+  const { data: locations = [], isLoading: loadingLocs } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("locations/")).data });
 
   const addMutation = useMutation({
     mutationFn: (data: any) => api.post("adjustments/", data),
@@ -49,9 +51,15 @@ export default function AdjustmentsPage() {
   const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
   const selectClass = "h-9 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none";
 
-  if (isLoading) {
+  if (isLoading || loadingProds || loadingLocs) {
     return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
+
+  const filteredAdjustments = adjustments.filter((a: any) => 
+    a.product_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    a.location_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    a.reason?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -129,7 +137,7 @@ export default function AdjustmentsPage() {
           { key: "reason", header: "Reason" },
           { key: "date", header: "Date", render: (item) => <span>{item.created_at?.split('T')[0]}</span> },
         ]}
-        data={adjustments}
+        data={filteredAdjustments}
       />
     </div>
   );

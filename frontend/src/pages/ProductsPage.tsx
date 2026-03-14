@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useSearch } from "@/lib/SearchContext";
 
 // Initial data removed, using API instead
 
@@ -49,11 +50,12 @@ function InlineEditCell({ value, onSave, type = "text" }: { value: string | numb
 
 export default function ProductsPage() {
   const queryClient = useQueryClient();
+  const { searchQuery } = useSearch();
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
-  const [editForm, setEditForm] = useState({ name: "", sku: "", category: "", unit: "" });
+  const [editForm, setEditForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
 
   // Data Fetching
   const { data: products = [], isLoading } = useQuery({
@@ -79,6 +81,19 @@ export default function ProductsPage() {
       return resp.data;
     },
   });
+
+  const { data: skuSuggestion } = useQuery({
+    queryKey: ["sku-suggestion"],
+    queryFn: async () => (await api.get("products/suggest_sku/")).data,
+    enabled: open, // Only fetch when "Add" modal is open
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (open && skuSuggestion) {
+      setForm(prev => ({ ...prev, sku: skuSuggestion.sku }));
+    }
+  }, [open, skuSuggestion]);
 
   // Mutations
   const addMutation = useMutation({
@@ -130,7 +145,8 @@ export default function ProductsPage() {
       name: item.name, 
       sku: item.sku, 
       category: item.category?.toString() || "", 
-      unit: item.unit?.toString() || "" 
+      unit: item.unit?.toString() || "",
+      initial_stock: item.initial_stock?.toString() || "0"
     });
     setEditOpen(true);
   };
@@ -143,7 +159,8 @@ export default function ProductsPage() {
         data: {
           ...editForm,
           category: editForm.category ? parseInt(editForm.category) : null,
-          unit: editForm.unit ? parseInt(editForm.unit) : null
+          unit: editForm.unit ? parseInt(editForm.unit) : null,
+          initial_stock: parseInt(editForm.initial_stock)
         } 
       });
     }
@@ -162,6 +179,13 @@ export default function ProductsPage() {
   });
 
   const threshold = settings?.low_stock_threshold || 15;
+
+  // Search filtering
+  const filteredProducts = products.filter((p: any) => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (p.category_name && p.category_name.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   // View logic
   if (isLoading) {
@@ -190,7 +214,7 @@ export default function ProductsPage() {
               </div>
               <div>
                 <label className={labelClass}>SKU Code</label>
-                <input value={form.sku} onChange={e => setForm({...form, sku: e.target.value})} className={inputClass} required />
+                <input value={form.sku} className={`${inputClass} bg-muted cursor-not-allowed`} readOnly placeholder="Generating..." />
               </div>
               <div>
                 <label className={labelClass}>Category</label>
@@ -229,7 +253,7 @@ export default function ProductsPage() {
             </div>
             <div>
               <label className={labelClass}>SKU Code</label>
-              <input value={editForm.sku} onChange={e => setEditForm({...editForm, sku: e.target.value})} className={inputClass} required />
+              <input value={editForm.sku} className={`${inputClass} bg-muted cursor-not-allowed`} readOnly />
             </div>
             <div>
               <label className={labelClass}>Category</label>
@@ -244,6 +268,10 @@ export default function ProductsPage() {
                 <option value="">Select Unit</option>
                 {units.map((u: any) => <option key={u.id} value={u.id}>{u.name}</option>)}
               </select>
+            </div>
+            <div>
+              <label className={labelClass}>Initial Stock</label>
+              <input type="number" value={editForm.initial_stock} onChange={e => setEditForm({...editForm, initial_stock: e.target.value})} className={inputClass} />
             </div>
             <button type="submit" disabled={updateMutation.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
               {updateMutation.isPending ? "Saving..." : "Save Changes"}
@@ -283,7 +311,8 @@ export default function ProductsPage() {
             </div>
           )},
         ]}
-        data={products}
+        rowClassName={(item) => item.total_stock < threshold ? "bg-destructive/5 hover:bg-destructive/10 text-destructive border-l-2 border-l-destructive" : ""}
+        data={filteredProducts}
       />
     </div>
   );

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface Column<T> {
   key: string;
@@ -10,9 +11,15 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   onRowClick?: (item: T) => void;
+  rowClassName?: (item: T) => string;
 }
 
-export function DataTable<T extends Record<string, any>>({ columns, data, onRowClick }: DataTableProps<T>) {
+export function DataTable<T extends Record<string, any>>({ 
+  columns, 
+  data, 
+  onRowClick,
+  rowClassName 
+}: DataTableProps<T>) {
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <table className="w-full text-sm">
@@ -33,7 +40,10 @@ export function DataTable<T extends Record<string, any>>({ columns, data, onRowC
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.2 }}
               onClick={() => onRowClick?.(item)}
-              className="border-b border-border last:border-0 transition-colors even:bg-muted/20 hover:bg-primary/5 cursor-pointer"
+              className={cn(
+                "border-b border-border last:border-0 transition-colors even:bg-muted/20 hover:bg-primary/5 cursor-pointer",
+                rowClassName?.(item)
+              )}
             >
               {columns.map((col) => (
                 <td key={col.key} className="px-4 py-3 text-foreground">

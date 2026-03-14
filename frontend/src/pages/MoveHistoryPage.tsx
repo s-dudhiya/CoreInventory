@@ -3,28 +3,40 @@ import { DataTable } from "@/components/DataTable";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Loader2 } from "lucide-react";
+import { useSearch } from "@/lib/SearchContext";
+import { cn } from "@/lib/utils";
 
-// Mock data removed
 const types = ["All", "Receipt", "Delivery", "Transfer", "Adjustment"];
 
 export default function MoveHistoryPage() {
   const [filter, setFilter] = useState("All");
-
+  const { searchQuery } = useSearch();
+  
   const { data: moves = [], isLoading } = useQuery({
     queryKey: ["moves"],
     queryFn: async () => (await api.get("moves/")).data,
   });
 
-  const filtered = filter === "All" ? moves : moves.filter((m: any) => m.move_type_display === filter);
-
   if (isLoading) {
     return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
 
+  const filtered = moves.filter((m: any) => {
+    const matchesSearch = !searchQuery || 
+      m.product_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.location_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.move_type_display?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.reference_id?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesType = filter === "All" || m.move_type_display === filter;
+    
+    return matchesSearch && matchesType;
+  });
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">Move History</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">Stock Movement History</h1>
         <p className="text-sm text-muted-foreground">Track all stock movements</p>
       </div>
 
@@ -33,9 +45,12 @@ export default function MoveHistoryPage() {
           <button
             key={t}
             onClick={() => setFilter(t)}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-              filter === t ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"
-            }`}
+            className={cn(
+              "rounded-lg px-4 py-1.5 text-xs font-medium transition-all",
+              filter === t 
+                ? "bg-primary text-primary-foreground shadow-sm" 
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            )}
           >
             {t}
           </button>
@@ -44,12 +59,11 @@ export default function MoveHistoryPage() {
 
       <DataTable
         columns={[
-          { key: "id", header: "Movement ID", render: (item) => <span className="font-mono text-xs tabular-nums">MOV-{item.id.toString().padStart(4, '0')}</span> },
           { key: "product", header: "Product", render: (item) => <span className="font-medium">{item.product_name}</span> },
-          { key: "location", header: "Location", render: (item) => <span>{item.location_name} ({item.warehouse_name})</span> },
-          { key: "qty", header: "Qty Change", render: (item) => (
-            <span className={`tabular-nums font-semibold ${item.quantity_change > 0 ? "text-success" : "text-destructive"}`}>
-              {item.quantity_change > 0 ? `+${item.quantity_change}` : item.quantity_change}
+          { key: "location", header: "Location", render: (item) => <span className="text-muted-foreground">{item.location_name}</span> },
+          { key: "quantity", header: "Change", render: (item) => (
+            <span className={cn("font-mono font-medium", item.quantity_change > 0 ? "text-success" : "text-destructive")}>
+              {item.quantity_change > 0 ? '+' : ''}{item.quantity_change}
             </span>
           )},
           { key: "type", header: "Type", render: (item) => (

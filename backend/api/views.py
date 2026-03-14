@@ -269,6 +269,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
 
+    @action(detail=False, methods=['get'])
+    def suggest_sku(self, request):
+        last_item = Product.objects.all().order_by('id').last()
+        last_id = last_item.id if last_item else 0
+        new_id = last_id + 1
+        sku = f"PROD-{new_id:04d}"
+        
+        # Ensure uniqueness
+        while Product.objects.filter(sku=sku).exists():
+            new_id += 1
+            sku = f"PROD-{new_id:04d}"
+            
+        return Response({"sku": sku})
+
 # -----------------------------
 # OPERATIONS VIEWSETS
 # -----------------------------

@@ -19,6 +19,7 @@ import WarehousesPage from "./pages/WarehousesPage";
 import AdjustmentsPage from "./pages/AdjustmentsPage";
 import MoveHistoryPage from "./pages/MoveHistoryPage";
 import { AuthProvider, useAuth } from "./lib/AuthContext";
+import { SearchProvider } from "./lib/SearchContext";
 
 const queryClient = new QueryClient();
 
@@ -64,7 +65,8 @@ function RoleRoute({ allowedRoles, children }: { allowedRoles: string[], childre
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
+      <SearchProvider>
+        <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -105,6 +107,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </SearchProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

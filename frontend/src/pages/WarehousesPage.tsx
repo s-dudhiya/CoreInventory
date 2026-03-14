@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Plus, MapPin, User, Trash2, Pencil, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, MapPin, User as UserIcon } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-
-// Initial data removed, using API instead
+import { useSearch } from "@/lib/SearchContext";
 
 export default function WarehousesPage() {
   const queryClient = useQueryClient();
+  const { searchQuery } = useSearch();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", address: "", manager: "" });
 
@@ -56,6 +56,12 @@ export default function WarehousesPage() {
   if (isLoading) {
     return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
+
+  const filteredWarehouses = warehouses.filter((w: any) => 
+    w.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    w.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (w.manager_name && w.manager_name.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   const inputClass = "h-9 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20";
   const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
@@ -107,33 +113,37 @@ export default function WarehousesPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {warehouses.map((wh) => (
-          <div key={wh.id} className="rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
-            <div className="flex items-start justify-between">
-              <h3 className="font-semibold text-foreground">{wh.name}</h3>
-              <div className="flex gap-1">
-                <button className="rounded p-1 text-muted-foreground hover:bg-accent hover:text-foreground"><Pencil className="h-3.5 w-3.5" /></button>
-                <button onClick={() => deleteMutation.mutate(wh.id)} className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
-              </div>
+      <DataTable 
+        columns={[
+          { key: "name", header: "Warehouse Name" },
+          { key: "address", header: "Address", render: (item) => (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="h-3.5 w-3.5" />
+              <span>{item.address}</span>
             </div>
-            <div className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5" />{wh.address}</div>
-              <div className="flex items-center gap-2"><User className="h-3.5 w-3.5" />{wh.manager_name || "Unassigned"}</div>
-            </div>
-            <div className="mt-4 flex gap-4 border-t border-border pt-3">
-              <div className="text-center">
-                <p className="text-lg font-bold tabular-nums text-foreground">{wh.product_count}</p>
-                <p className="text-xs text-muted-foreground">Products</p>
+          )},
+          { key: "manager", header: "Manager", render: (item) => (
+            <div className="flex items-center gap-2">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <UserIcon className="h-3 w-3" />
               </div>
-              <div className="text-center">
-                <p className="text-lg font-bold tabular-nums text-foreground">{wh.location_count}</p>
-                <p className="text-xs text-muted-foreground">Zones</p>
-              </div>
+              <span>{item.manager_name || "Unassigned"}</span>
             </div>
-          </div>
-        ))}
-      </div>
+          )},
+          { key: "stats", header: "Summary", render: (item) => (
+            <div className="flex gap-4 text-xs font-medium">
+              <span className="text-foreground">{item.product_count} Products</span>
+              <span className="text-muted-foreground">{item.location_count} Zones</span>
+            </div>
+          )},
+          { key: "actions", header: "", render: (item) => (
+            <button onClick={() => deleteMutation.mutate(item.id)} className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )},
+        ]}
+        data={filteredWarehouses}
+      />
     </div>
   );
 }
