@@ -1,23 +1,26 @@
 import { useState } from "react";
 import { DataTable } from "@/components/DataTable";
 import { StatusBadge } from "@/components/StatusBadge";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { Loader2 } from "lucide-react";
 
-const moveData = [
-  { id: "MOV-001", product: "Steel Bolts M8", location: "Main Warehouse", qty: "+500", type: "Receipt", status: "done" as const, date: "2026-03-14" },
-  { id: "MOV-002", product: "Office Chair Pro", location: "Storage B", qty: "-25", type: "Delivery", status: "done" as const, date: "2026-03-14" },
-  { id: "MOV-003", product: "Copper Wire 2mm", location: "Production", qty: "+200", type: "Transfer", status: "done" as const, date: "2026-03-13" },
-  { id: "MOV-004", product: "Packing Tape 50mm", location: "Main Warehouse", qty: "-15", type: "Adjustment", status: "done" as const, date: "2026-03-13" },
-  { id: "MOV-005", product: "LED Panel 60x60", location: "Storage A", qty: "+100", type: "Receipt", status: "done" as const, date: "2026-03-12" },
-  { id: "MOV-006", product: "Desk Monitor Arm", location: "Production", qty: "-8", type: "Transfer", status: "done" as const, date: "2026-03-11" },
-  { id: "MOV-007", product: "Steel Bolts M8", location: "Production", qty: "+150", type: "Transfer", status: "done" as const, date: "2026-03-10" },
-];
-
+// Mock data removed
 const types = ["All", "Receipt", "Delivery", "Transfer", "Adjustment"];
 
 export default function MoveHistoryPage() {
   const [filter, setFilter] = useState("All");
 
-  const filtered = filter === "All" ? moveData : moveData.filter((m) => m.type === filter);
+  const { data: moves = [], isLoading } = useQuery({
+    queryKey: ["moves"],
+    queryFn: async () => (await api.get("/moves/")).data,
+  });
+
+  const filtered = filter === "All" ? moves : moves.filter((m: any) => m.move_type_display === filter);
+
+  if (isLoading) {
+    return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -42,17 +45,19 @@ export default function MoveHistoryPage() {
 
       <DataTable
         columns={[
-          { key: "id", header: "Movement ID", render: (item) => <span className="font-mono text-xs tabular-nums">{item.id}</span> },
-          { key: "product", header: "Product", render: (item) => <span className="font-medium">{item.product}</span> },
-          { key: "location", header: "Location" },
+          { key: "id", header: "Movement ID", render: (item) => <span className="font-mono text-xs tabular-nums">MOV-{item.id.toString().padStart(4, '0')}</span> },
+          { key: "product", header: "Product", render: (item) => <span className="font-medium">{item.product_name}</span> },
+          { key: "location", header: "Location", render: (item) => <span>{item.location_name} ({item.warehouse_name})</span> },
           { key: "qty", header: "Qty Change", render: (item) => (
-            <span className={`tabular-nums font-semibold ${item.qty.startsWith("+") ? "text-success" : "text-destructive"}`}>{item.qty}</span>
+            <span className={`tabular-nums font-semibold ${item.quantity_change > 0 ? "text-success" : "text-destructive"}`}>
+              {item.quantity_change > 0 ? `+${item.quantity_change}` : item.quantity_change}
+            </span>
           )},
           { key: "type", header: "Type", render: (item) => (
-            <span className="inline-flex rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{item.type}</span>
+            <span className="inline-flex rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{item.move_type_display}</span>
           )},
-          { key: "status", header: "Status", render: (item) => <StatusBadge status={item.status} /> },
-          { key: "date", header: "Date" },
+          { key: "status", header: "Status", render: (item) => <StatusBadge status="done" /> },
+          { key: "date", header: "Date", render: (item) => <span>{item.created_at?.split('T')[0]}</span> },
         ]}
         data={filtered}
       />

@@ -1,16 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, Pencil, Trash2, Check, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Check, X, Loader2 } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
-const initialProducts = [
-  { id: 1, name: "Steel Bolts M8", sku: "STL-M8-001", category: "Raw Materials", uom: "pcs", stock: 2400, location: "Main Warehouse / Rack A-01" },
-  { id: 2, name: "Office Chair Pro", sku: "FRN-CHP-042", category: "Furniture", uom: "unit", stock: 85, location: "Storage B / Zone 3" },
-  { id: 3, name: "LED Panel 60x60", sku: "ELC-LED-060", category: "Electronics", uom: "unit", stock: 320, location: "Main Warehouse / Rack C-12" },
-  { id: 4, name: "Packing Tape 50mm", sku: "PKG-TPE-050", category: "Packaging", uom: "roll", stock: 1200, location: "Storage A / Shelf 7" },
-  { id: 5, name: "Copper Wire 2mm", sku: "RAW-CPR-002", category: "Raw Materials", uom: "meter", stock: 8500, location: "Production / Bay 2" },
-  { id: 6, name: "Desk Monitor Arm", sku: "FRN-ARM-019", category: "Furniture", uom: "unit", stock: 42, location: "Storage B / Zone 1" },
-];
+// Initial data removed, using API instead
 
 function InlineEditCell({ value, onSave, type = "text" }: { value: string | number; onSave: (v: string) => void; type?: string }) {
   const [editing, setEditing] = useState(false);
@@ -52,58 +48,115 @@ function InlineEditCell({ value, onSave, type = "text" }: { value: string | numb
 }
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState(initialProducts);
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState({ name: "", category: "", uom: "", stock: "", location: "" });
   const [editOpen, setEditOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", sku: "", category: "", uom: "", stock: "", location: "" });
+  const [form, setForm] = useState({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
+  const [editForm, setEditForm] = useState({ name: "", sku: "", category: "", unit: "" });
+
+  // Data Fetching
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const resp = await api.get("/products/");
+      return resp.data;
+    },
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const resp = await api.get("/categories/");
+      return resp.data;
+    },
+  });
+
+  const { data: units = [] } = useQuery({
+    queryKey: ["units"],
+    queryFn: async () => {
+      const resp = await api.get("/units/");
+      return resp.data;
+    },
+  });
+
+  // Mutations
+  const addMutation = useMutation({
+    mutationFn: (newProd: any) => api.post("/products/", newProd),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Product added successfully");
+      setOpen(false);
+      setForm({ name: "", sku: "", category: "", unit: "", initial_stock: "0" });
+    },
+    onError: () => toast.error("Failed to add product"),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => api.delete(`/products/${id}/`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Product deleted");
+    },
+    onError: () => toast.error("Failed to delete product"),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number, data: any }) => api.patch(`/products/${id}/`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Product updated");
+      setEditOpen(false);
+    },
+    onError: () => toast.error("Failed to update product"),
+  });
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    setProducts([...products, { id: Date.now(), ...form, stock: Number(form.stock), location: form.location || "Unassigned" }]);
-    setForm({ name: "", sku: "", category: "", uom: "", stock: "", location: "" });
-    setOpen(false);
+    addMutation.mutate({
+      ...form,
+      category: form.category ? parseInt(form.category) : null,
+      unit: form.unit ? parseInt(form.unit) : null,
+      initial_stock: parseInt(form.initial_stock)
+    });
   };
 
-  const handleDelete = (id: number) => setProducts(products.filter((p) => p.id !== id));
-
-  const handleEdit = (item: typeof products[0]) => {
+  const handleEdit = (item: any) => {
     setEditId(item.id);
-    setEditForm({ name: item.name, category: item.category, uom: item.uom, stock: String(item.stock), location: item.location });
+    setEditForm({ 
+      name: item.name, 
+      sku: item.sku, 
+      category: item.category?.toString() || "", 
+      unit: item.unit?.toString() || "" 
+    });
     setEditOpen(true);
   };
 
   const handleEditSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setProducts(products.map(p => p.id === editId ? { ...p, name: editForm.name, category: editForm.category, uom: editForm.uom, stock: Number(editForm.stock), location: editForm.location } : p));
-    setEditOpen(false);
-    setEditId(null);
+    if (editId) {
+      updateMutation.mutate({ 
+        id: editId, 
+        data: {
+          ...editForm,
+          category: editForm.category ? parseInt(editForm.category) : null,
+          unit: editForm.unit ? parseInt(editForm.unit) : null
+        } 
+      });
+    }
   };
 
-  const updateField = (id: number, field: string, value: string) => {
-    setProducts(products.map(p => p.id === id ? { ...p, [field]: field === "stock" ? Number(value) : value } : p));
+  const updateInlineField = (id: number, field: string, value: string) => {
+    updateMutation.mutate({ id, data: { [field]: value } });
   };
 
   const inputClass = "h-9 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20";
   const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
 
-  const formFields = [
-    { label: "Product Name", key: "name", placeholder: "e.g. Steel Bolts M8" },
-    { label: "SKU Code", key: "sku", placeholder: "e.g. STL-M8-001" },
-    { label: "Category", key: "category", placeholder: "e.g. Raw Materials" },
-    { label: "Unit of Measure", key: "uom", placeholder: "e.g. pcs, unit, kg" },
-    { label: "Location", key: "location", placeholder: "e.g. Main Warehouse / Rack A-01" },
-    { label: "Initial Stock", key: "stock", placeholder: "0", type: "number" },
-  ];
-
-  const editFields = [
-    { label: "Product Name", key: "name", placeholder: "e.g. Steel Bolts M8" },
-    { label: "Category", key: "category", placeholder: "e.g. Raw Materials" },
-    { label: "Unit of Measure", key: "uom", placeholder: "e.g. pcs, unit, kg" },
-    { label: "Location", key: "location", placeholder: "e.g. Main Warehouse / Rack A-01" },
-    { label: "Stock", key: "stock", placeholder: "0", type: "number" },
-  ];
+  // View logic
+  if (isLoading) {
+    return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -121,21 +174,34 @@ export default function ProductsPage() {
           <DialogContent>
             <DialogHeader><DialogTitle>Add Product</DialogTitle></DialogHeader>
             <form onSubmit={handleAdd} className="space-y-4">
-              {formFields.map((f) => (
-                <div key={f.key}>
-                  <label className={labelClass}>{f.label}</label>
-                  <input
-                    type={f.type || "text"}
-                    value={form[f.key as keyof typeof form]}
-                    onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                    placeholder={f.placeholder}
-                    className={inputClass}
-                    required={f.key !== "stock" && f.key !== "location"}
-                  />
-                </div>
-              ))}
-              <button type="submit" className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90">
-                Add Product
+              <div>
+                <label className={labelClass}>Product Name</label>
+                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} className={inputClass} required />
+              </div>
+              <div>
+                <label className={labelClass}>SKU Code</label>
+                <input value={form.sku} onChange={e => setForm({...form, sku: e.target.value})} className={inputClass} required />
+              </div>
+              <div>
+                <label className={labelClass}>Category</label>
+                <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className={inputClass}>
+                  <option value="">Select Category</option>
+                  {categories.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Unit</label>
+                <select value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} className={inputClass}>
+                  <option value="">Select Unit</option>
+                  {units.map((u: any) => <option key={u.id} value={u.id}>{u.name}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Initial Stock</label>
+                <input type="number" value={form.initial_stock} onChange={e => setForm({...form, initial_stock: e.target.value})} className={inputClass} />
+              </div>
+              <button type="submit" disabled={addMutation.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+                {addMutation.isPending ? "Adding..." : "Add Product"}
               </button>
             </form>
           </DialogContent>
@@ -147,21 +213,30 @@ export default function ProductsPage() {
         <DialogContent>
           <DialogHeader><DialogTitle>Edit Product</DialogTitle></DialogHeader>
           <form onSubmit={handleEditSave} className="space-y-4">
-            {editFields.map((f) => (
-              <div key={f.key}>
-                <label className={labelClass}>{f.label}</label>
-                <input
-                  type={f.type || "text"}
-                  value={editForm[f.key as keyof typeof editForm]}
-                  onChange={(e) => setEditForm({ ...editForm, [f.key]: e.target.value })}
-                  placeholder={f.placeholder}
-                  className={inputClass}
-                  required
-                />
-              </div>
-            ))}
-            <button type="submit" className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90">
-              Save Changes
+            <div>
+              <label className={labelClass}>Product Name</label>
+              <input value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className={inputClass} required />
+            </div>
+            <div>
+              <label className={labelClass}>SKU Code</label>
+              <input value={editForm.sku} onChange={e => setEditForm({...editForm, sku: e.target.value})} className={inputClass} required />
+            </div>
+            <div>
+              <label className={labelClass}>Category</label>
+              <select value={editForm.category} onChange={e => setEditForm({...editForm, category: e.target.value})} className={inputClass}>
+                <option value="">Select Category</option>
+                {categories.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className={labelClass}>Unit</label>
+              <select value={editForm.unit} onChange={e => setEditForm({...editForm, unit: e.target.value})} className={inputClass}>
+                <option value="">Select Unit</option>
+                {units.map((u: any) => <option key={u.id} value={u.id}>{u.name}</option>)}
+              </select>
+            </div>
+            <button type="submit" disabled={updateMutation.isPending} className="h-9 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+              {updateMutation.isPending ? "Saving..." : "Save Changes"}
             </button>
           </form>
         </DialogContent>
@@ -170,27 +245,31 @@ export default function ProductsPage() {
       <DataTable
         columns={[
           { key: "name", header: "Product Name", render: (item) => (
-            <InlineEditCell value={item.name} onSave={(v) => updateField(item.id, "name", v)} />
+            <InlineEditCell value={item.name} onSave={(v) => updateInlineField(item.id, "name", v)} />
           )},
           { key: "sku", header: "SKU", render: (item) => <span className="tabular-nums text-muted-foreground font-mono text-xs">{item.sku}</span> },
           { key: "category", header: "Category", render: (item) => (
-            <InlineEditCell value={item.category} onSave={(v) => updateField(item.id, "category", v)} />
+            <span className="text-sm">{item.category_name || "N/A"}</span>
           )},
           { key: "uom", header: "UoM", render: (item) => (
-            <InlineEditCell value={item.uom} onSave={(v) => updateField(item.id, "uom", v)} />
+            <span className="text-sm">{item.unit_name || "N/A"}</span>
           )},
-          { key: "stock", header: "Stock", render: (item) => (
-            <span className={item.stock < 50 ? "text-destructive" : ""}>
-              <InlineEditCell value={item.stock} onSave={(v) => updateField(item.id, "stock", v)} type="number" />
+          { key: "stock", header: "Total Stock", render: (item) => (
+            <span className={item.total_stock < 15 ? "text-destructive font-medium" : ""}>
+              {item.total_stock.toLocaleString()}
             </span>
           )},
-          { key: "location", header: "Location", render: (item) => (
-            <InlineEditCell value={item.location} onSave={(v) => updateField(item.id, "location", v)} />
+          { key: "location", header: "Locations", render: (item) => (
+            <div className="text-xs text-muted-foreground max-w-[200px] truncate" title={item.stocks?.map((s: any) => `${s.location_name}: ${s.quantity}`).join(", ")}>
+              {item.stocks?.length > 0 
+                ? item.stocks.map((s: any) => s.location_name).join(", ") 
+                : "No stock recorded"}
+            </div>
           )},
           { key: "actions", header: "", render: (item) => (
             <div className="flex gap-1">
               <button onClick={() => handleEdit(item)} className="rounded p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"><Pencil className="h-3.5 w-3.5" /></button>
-              <button onClick={() => handleDelete(item.id)} className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
+              <button onClick={() => deleteMutation.mutate(item.id)} className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
             </div>
           )},
         ]}

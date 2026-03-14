@@ -1,7 +1,10 @@
-from rest_framework import status
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.db import transaction
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -11,11 +14,16 @@ from .serializers import (
     RegisterSerializer,
     RequestOTPResetSerializer,
     VerifyOTPAndResetPasswordSerializer,
-    UserSerializer
+    UserSerializer, CategorySerializer, UnitOfMeasureSerializer,
+    WarehouseSerializer, LocationSerializer, ProductSerializer,
+    StockSerializer, SupplierSerializer, ReceiptSerializer,
+    DeliveryOrderSerializer, InternalTransferSerializer,
+    StockMoveSerializer, InventoryAdjustmentSerializer
 )
 from .models import (
     OTP, generate_otp, Product, Receipt, 
-    DeliveryOrder, InternalTransfer, Stock, Warehouse, StockMove
+    DeliveryOrder, InternalTransfer, Stock, Warehouse, StockMove,
+    Category, UnitOfMeasure, Location, Supplier, InventoryAdjustment
 )
 
 def set_jwt_cookies(response, user):
@@ -205,3 +213,192 @@ class DashboardKPIView(APIView):
             },
             "recent_activity": activity_data
         }, status=status.HTTP_200_OK)
+
+# -----------------------------
+# CORE INVENTORY VIEWSETS
+# -----------------------------
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+
+class UnitOfMeasureViewSet(viewsets.ModelViewSet):
+    queryset = UnitOfMeasure.objects.all()
+    serializer_class = UnitOfMeasureSerializer
+    permission_classes = [IsAuthenticated]
+
+class WarehouseViewSet(viewsets.ModelViewSet):
+    queryset = Warehouse.objects.all()
+    serializer_class = WarehouseSerializer
+    permission_classes = [IsAuthenticated]
+
+class LocationViewSet(viewsets.ModelViewSet):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+    permission_classes = [IsAuthenticated]
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all().prefetch_related('stock_set', 'stock_set__location', 'stock_set__location__warehouse')
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+# -----------------------------
+# OPERATIONS VIEWSETS
+# -----------------------------
+
+class SupplierViewSet(viewsets.ModelViewSet):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+    permission_classes = [IsAuthenticated]
+
+class ReceiptViewSet(viewsets.ModelViewSet):
+    queryset = Receipt.objects.all().prefetch_related('items', 'items__product')
+    serializer_class = ReceiptSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def finalize(self, request, pk=None):
+        receipt = self.get_object_or_404(Receipt, pk=pk)
+        if receipt.status == 'done':
+            return Response({'error': 'Already finalized'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        with transaction.atomic():
+            # Add items to stock
+            for item in receipt.items.all():
+                stock, created = Stock.objects.get_or_create(
+                    product=item.product,
+                    location=receipt.warehouse.location_set.first() # Default to first location for simplicity
+                )
+                stock.quantity += item.quantity
+                stock.save()
+                
+                # Log move
+                StockMove.objects.create(
+                    product=item.product,
+                    location=stock.location,
+                    quantity_change=item.quantity,
+                    move_type='receipt',
+                    reference_id=f"REC-{receipt.id}"
+                )
+            
+            receipt.status = 'done'
+            receipt.save()
+            
+        return Response({'status': 'finalized'})
+    
+    def get_object_or_404(self, model, pk):
+        from django.shortcuts import get_object_or_404
+        return get_object_or_404(model, pk=pk)
+
+
+class DeliveryOrderViewSet(viewsets.ModelViewSet):
+    queryset = DeliveryOrder.objects.all().prefetch_related('items', 'items__product')
+    serializer_class = DeliveryOrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def finalize(self, request, pk=None):
+        delivery = self.get_object_or_404(DeliveryOrder, pk=pk)
+        if delivery.status == 'done':
+            return Response({'error': 'Already finalized'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        with transaction.atomic():
+            for item in delivery.items.all():
+                # Deduct from first available location in that warehouse
+                stock = Stock.objects.filter(product=item.product, location__warehouse=delivery.warehouse).first()
+                if not stock or stock.quantity < item.quantity:
+                    return Response({'error': f'Insufficient stock for {item.product.name}'}, status=status.HTTP_400_BAD_REQUEST)
+                
+                stock.quantity -= item.quantity
+                stock.save()
+                
+                # Log move
+                StockMove.objects.create(
+                    product=item.product,
+                    location=stock.location,
+                    quantity_change=-item.quantity,
+                    move_type='delivery',
+                    reference_id=f"DEL-{delivery.id}"
+                )
+            
+            delivery.status = 'done'
+            delivery.save()
+            
+        return Response({'status': 'finalized'})
+    
+    def get_object_or_404(self, model, pk):
+        from django.shortcuts import get_object_or_404
+        return get_object_or_404(model, pk=pk)
+
+
+class InternalTransferViewSet(viewsets.ModelViewSet):
+    queryset = InternalTransfer.objects.all().prefetch_related('items', 'items__product')
+    serializer_class = InternalTransferSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def finalize(self, request, pk=None):
+        transfer = self.get_object_or_404(InternalTransfer, pk=pk)
+        if transfer.status == 'done':
+            return Response({'error': 'Already finalized'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        with transaction.atomic():
+            for item in transfer.items.all():
+                # Out from old location
+                source_stock = Stock.objects.filter(product=item.product, location=transfer.from_location).first()
+                if not source_stock or source_stock.quantity < item.quantity:
+                    return Response({'error': f'Insufficient stock at source for {item.product.name}'}, status=status.HTTP_400_BAD_REQUEST)
+                
+                source_stock.quantity -= item.quantity
+                source_stock.save()
+                
+                # In to new location
+                dest_stock, created = Stock.objects.get_or_create(product=item.product, location=transfer.to_location)
+                dest_stock.quantity += item.quantity
+                dest_stock.save()
+                
+                # Log moves
+                StockMove.objects.create(
+                    product=item.product, location=transfer.from_location,
+                    quantity_change=-item.quantity, move_type='transfer', reference_id=f"TRF-{transfer.id}"
+                )
+                StockMove.objects.create(
+                    product=item.product, location=transfer.to_location,
+                    quantity_change=item.quantity, move_type='transfer', reference_id=f"TRF-{transfer.id}"
+                )
+            
+            transfer.status = 'done'
+            transfer.save()
+            
+        return Response({'status': 'finalized'})
+    
+    def get_object_or_404(self, model, pk):
+        from django.shortcuts import get_object_or_404
+        return get_object_or_404(model, pk=pk)
+
+
+class StockMoveViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = StockMove.objects.all().select_related('product', 'location', 'location__warehouse').order_by('-created_at')
+    serializer_class = StockMoveSerializer
+    permission_classes = [IsAuthenticated]
+
+class InventoryAdjustmentViewSet(viewsets.ModelViewSet):
+    queryset = InventoryAdjustment.objects.all().select_related('product', 'location').order_by('-created_at')
+    serializer_class = InventoryAdjustmentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(adjusted_by=self.request.user)
+
+
+
