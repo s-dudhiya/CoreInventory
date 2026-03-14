@@ -25,7 +25,7 @@ const App = () => (
           <Route path="/otp-verify" element={<OTPVerifyPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
