@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Box, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Box, Eye, EyeOff, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { api } from "@/lib/api";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -10,9 +14,30 @@ export default function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(false);
 
+  const { login } = useAuth();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  const loginMutation = useMutation({
+    mutationFn: async () => {
+      // NOTE: We pass username instead of email because Django expects 'username' by default.
+      // Since our RegisterSerializer takes a username, we will use the email as the username for simplicity in login here
+      const response = await api.post('/auth/login/', { username: email, password });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      login(data.user);
+      toast.success(data.message || "Logged in successfully!");
+      navigate(from, { replace: true });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || "Failed to log in. Check your credentials.");
+    }
+  });
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
+    loginMutation.mutate();
   };
 
   return (
@@ -90,8 +115,12 @@ export default function LoginPage() {
               <Link to="/forgot-password" className="text-sm font-medium text-primary hover:underline">Forgot password?</Link>
             </div>
 
-            <button type="submit" className="h-10 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98]">
-              Sign In
+            <button 
+              type="submit" 
+              disabled={loginMutation.isPending}
+              className="group flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none"
+            >
+              {loginMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
             </button>
           </form>
 

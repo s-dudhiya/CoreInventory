@@ -1,15 +1,34 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Box } from "lucide-react";
+import { Box, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
+  const resetMutation = useMutation({
+    mutationFn: async () => {
+      const response = await api.post('/auth/password-reset/request/', { email });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "OTP sent if account exists!");
+      // Pass the email forward so the user doesn't have to re-type it
+      navigate("/otp-verify", { state: { email } });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || "Failed to send reset instruction.");
+    }
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/otp-verify");
+    if (!email) return;
+    resetMutation.mutate();
   };
 
   return (
@@ -27,8 +46,12 @@ export default function ForgotPasswordPage() {
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@company.com"
               className="h-10 w-full rounded-lg border border-border bg-card px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20" required />
           </div>
-          <button type="submit" className="h-10 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]">
-            Send Code
+          <button 
+            type="submit" 
+            disabled={resetMutation.isPending || !email}
+            className="group flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none"
+          >
+            {resetMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Code"}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">

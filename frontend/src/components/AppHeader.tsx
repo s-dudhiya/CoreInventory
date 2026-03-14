@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Bell, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,20 @@ interface AppHeaderProps {
 export function AppHeader({ breadcrumbs }: AppHeaderProps) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
+  const getInitials = () => {
+    if (!user) return "U";
+    if (user.first_name && user.last_name) {
+      return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase();
+    }
+    return user.username.substring(0, 2).toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card/80 px-6 backdrop-blur-md">
@@ -51,7 +66,7 @@ export function AppHeader({ breadcrumbs }: AppHeaderProps) {
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-accent transition-colors">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                JD
+                {getInitials()}
               </div>
               <ChevronDown className="h-3 w-3 text-muted-foreground" />
             </button>
@@ -64,7 +79,7 @@ export function AppHeader({ breadcrumbs }: AppHeaderProps) {
               <Settings className="mr-2 h-4 w-4" /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/login")} className="text-destructive">
+            <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" /> Logout
             </DropdownMenuItem>
           </DropdownMenuContent>

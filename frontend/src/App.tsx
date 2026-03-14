@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,12 +18,29 @@ import OperationsPage from "./pages/OperationsPage";
 import WarehousesPage from "./pages/WarehousesPage";
 import AdjustmentsPage from "./pages/AdjustmentsPage";
 import MoveHistoryPage from "./pages/MoveHistoryPage";
+import { AuthProvider, useAuth } from "./lib/AuthContext";
 
 const queryClient = new QueryClient();
 
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -35,7 +52,7 @@ const App = () => (
           <Route path="/otp-verify" element={<OTPVerifyPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-          <Route element={<AppLayout />}>
+          <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/operations" element={<OperationsPage />} />
@@ -50,6 +67,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

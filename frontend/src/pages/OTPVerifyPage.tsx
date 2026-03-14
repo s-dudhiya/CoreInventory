@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { Box } from "lucide-react";
 import { motion } from "framer-motion";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -8,9 +8,18 @@ export default function OTPVerifyPage() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
 
+  const location = useLocation();
+  const email = location.state?.email;
+
+  if (!email) {
+    return <Navigate to="/forgot-password" replace />;
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/reset-password");
+    if (otp.length === 6) {
+      navigate("/reset-password", { state: { email, otp } });
+    }
   };
 
   return (

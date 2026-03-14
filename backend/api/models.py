@@ -1,6 +1,34 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import random
+import string
 
+# -----------------------------
+# USER PROFILE (ROLES)
+# -----------------------------
+class UserProfile(models.Model):
+    ROLE_CHOICES = [
+        ('inventory_manager', 'Inventory Manager'),
+        ('warehouse_staff', 'Warehouse Staff'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='warehouse_staff')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.get_role_display()}"
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 # -----------------------------
 # CATEGORY
@@ -224,3 +252,23 @@ class StockMove(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity_change})"
+
+
+# -----------------------------
+# OTP STORAGE FOR PASSWORD RESET
+# -----------------------------
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    def is_valid(self):
+        # OTP is valid for 10 minutes
+        return not self.is_used and self.created_at >= timezone.now() - timedelta(minutes=10)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.code}"
+
+def generate_otp():
+    return ''.join(random.choices(string.digits, k=6))
