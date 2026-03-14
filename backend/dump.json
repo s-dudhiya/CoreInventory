@@ -1,0 +1,2942 @@
+[
+  {
+    "model": "api.category",
+    "pk": 1,
+    "fields": {
+      "name": "Category 1",
+      "description": "Description 1"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 2,
+    "fields": {
+      "name": "Category 2",
+      "description": "Description 2"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 3,
+    "fields": {
+      "name": "Category 3",
+      "description": "Description 3"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 4,
+    "fields": {
+      "name": "Category 4",
+      "description": "Description 4"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 5,
+    "fields": {
+      "name": "Category 5",
+      "description": "Description 5"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 6,
+    "fields": {
+      "name": "Category 6",
+      "description": "Description 6"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 7,
+    "fields": {
+      "name": "Category 7",
+      "description": "Description 7"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 8,
+    "fields": {
+      "name": "Category 8",
+      "description": "Description 8"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 9,
+    "fields": {
+      "name": "Category 9",
+      "description": "Description 9"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 10,
+    "fields": {
+      "name": "Category 10",
+      "description": "Description 10"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 11,
+    "fields": {
+      "name": "Category 11",
+      "description": "Description 11"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 12,
+    "fields": {
+      "name": "Category 12",
+      "description": "Description 12"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 13,
+    "fields": {
+      "name": "Category 13",
+      "description": "Description 13"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 14,
+    "fields": {
+      "name": "Category 14",
+      "description": "Description 14"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 15,
+    "fields": {
+      "name": "Category 15",
+      "description": "Description 15"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 16,
+    "fields": {
+      "name": "Category 16",
+      "description": "Description 16"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 17,
+    "fields": {
+      "name": "Category 17",
+      "description": "Description 17"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 18,
+    "fields": {
+      "name": "Category 18",
+      "description": "Description 18"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 19,
+    "fields": {
+      "name": "Category 19",
+      "description": "Description 19"
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 20,
+    "fields": {
+      "name": "Category 20",
+      "description": "Description 20"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 1,
+    "fields": {
+      "name": "Unit 1",
+      "symbol": "U1"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 2,
+    "fields": {
+      "name": "Unit 2",
+      "symbol": "U2"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 3,
+    "fields": {
+      "name": "Unit 3",
+      "symbol": "U3"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 4,
+    "fields": {
+      "name": "Unit 4",
+      "symbol": "U4"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 5,
+    "fields": {
+      "name": "Unit 5",
+      "symbol": "U5"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 6,
+    "fields": {
+      "name": "Unit 6",
+      "symbol": "U6"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 7,
+    "fields": {
+      "name": "Unit 7",
+      "symbol": "U7"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 8,
+    "fields": {
+      "name": "Unit 8",
+      "symbol": "U8"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 9,
+    "fields": {
+      "name": "Unit 9",
+      "symbol": "U9"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 10,
+    "fields": {
+      "name": "Unit 10",
+      "symbol": "U10"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 11,
+    "fields": {
+      "name": "Unit 11",
+      "symbol": "U11"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 12,
+    "fields": {
+      "name": "Unit 12",
+      "symbol": "U12"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 13,
+    "fields": {
+      "name": "Unit 13",
+      "symbol": "U13"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 14,
+    "fields": {
+      "name": "Unit 14",
+      "symbol": "U14"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 15,
+    "fields": {
+      "name": "Unit 15",
+      "symbol": "U15"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 16,
+    "fields": {
+      "name": "Unit 16",
+      "symbol": "U16"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 17,
+    "fields": {
+      "name": "Unit 17",
+      "symbol": "U17"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 18,
+    "fields": {
+      "name": "Unit 18",
+      "symbol": "U18"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 19,
+    "fields": {
+      "name": "Unit 19",
+      "symbol": "U19"
+    }
+  },
+  {
+    "model": "api.unitofmeasure",
+    "pk": 20,
+    "fields": {
+      "name": "Unit 20",
+      "symbol": "U20"
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 1,
+    "fields": {
+      "name": "Warehouse 1",
+      "address": "City 1",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 2,
+    "fields": {
+      "name": "Warehouse 2",
+      "address": "City 2",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 3,
+    "fields": {
+      "name": "Warehouse 3",
+      "address": "City 3",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 4,
+    "fields": {
+      "name": "Warehouse 4",
+      "address": "City 4",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 5,
+    "fields": {
+      "name": "Warehouse 5",
+      "address": "City 5",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 6,
+    "fields": {
+      "name": "Warehouse 6",
+      "address": "City 6",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 7,
+    "fields": {
+      "name": "Warehouse 7",
+      "address": "City 7",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 8,
+    "fields": {
+      "name": "Warehouse 8",
+      "address": "City 8",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 9,
+    "fields": {
+      "name": "Warehouse 9",
+      "address": "City 9",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 10,
+    "fields": {
+      "name": "Warehouse 10",
+      "address": "City 10",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 11,
+    "fields": {
+      "name": "Warehouse 11",
+      "address": "City 11",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 12,
+    "fields": {
+      "name": "Warehouse 12",
+      "address": "City 12",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 13,
+    "fields": {
+      "name": "Warehouse 13",
+      "address": "City 13",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 14,
+    "fields": {
+      "name": "Warehouse 14",
+      "address": "City 14",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 15,
+    "fields": {
+      "name": "Warehouse 15",
+      "address": "City 15",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 16,
+    "fields": {
+      "name": "Warehouse 16",
+      "address": "City 16",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 17,
+    "fields": {
+      "name": "Warehouse 17",
+      "address": "City 17",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 18,
+    "fields": {
+      "name": "Warehouse 18",
+      "address": "City 18",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 19,
+    "fields": {
+      "name": "Warehouse 19",
+      "address": "City 19",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.warehouse",
+    "pk": 20,
+    "fields": {
+      "name": "Warehouse 20",
+      "address": "City 20",
+      "manager": null
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 1,
+    "fields": {
+      "warehouse": 16,
+      "name": "Rack 1"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 2,
+    "fields": {
+      "warehouse": 2,
+      "name": "Rack 2"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 3,
+    "fields": {
+      "warehouse": 15,
+      "name": "Rack 3"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 4,
+    "fields": {
+      "warehouse": 2,
+      "name": "Rack 4"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 5,
+    "fields": {
+      "warehouse": 17,
+      "name": "Rack 5"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 6,
+    "fields": {
+      "warehouse": 4,
+      "name": "Rack 6"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 7,
+    "fields": {
+      "warehouse": 16,
+      "name": "Rack 7"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 8,
+    "fields": {
+      "warehouse": 3,
+      "name": "Rack 8"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 9,
+    "fields": {
+      "warehouse": 5,
+      "name": "Rack 9"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 10,
+    "fields": {
+      "warehouse": 8,
+      "name": "Rack 10"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 11,
+    "fields": {
+      "warehouse": 20,
+      "name": "Rack 11"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 12,
+    "fields": {
+      "warehouse": 18,
+      "name": "Rack 12"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 13,
+    "fields": {
+      "warehouse": 13,
+      "name": "Rack 13"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 14,
+    "fields": {
+      "warehouse": 11,
+      "name": "Rack 14"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 15,
+    "fields": {
+      "warehouse": 13,
+      "name": "Rack 15"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 16,
+    "fields": {
+      "warehouse": 20,
+      "name": "Rack 16"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 17,
+    "fields": {
+      "warehouse": 15,
+      "name": "Rack 17"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 18,
+    "fields": {
+      "warehouse": 4,
+      "name": "Rack 18"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 19,
+    "fields": {
+      "warehouse": 16,
+      "name": "Rack 19"
+    }
+  },
+  {
+    "model": "api.location",
+    "pk": 20,
+    "fields": {
+      "warehouse": 14,
+      "name": "Rack 20"
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 1,
+    "fields": {
+      "name": "Product 1",
+      "sku": "SKU001",
+      "category": 7,
+      "unit": 10,
+      "initial_stock": 114
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 2,
+    "fields": {
+      "name": "Product 2",
+      "sku": "SKU002",
+      "category": 20,
+      "unit": 8,
+      "initial_stock": 84
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 3,
+    "fields": {
+      "name": "Product 3",
+      "sku": "SKU003",
+      "category": 17,
+      "unit": 9,
+      "initial_stock": 105
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 4,
+    "fields": {
+      "name": "Product 4",
+      "sku": "SKU004",
+      "category": 19,
+      "unit": 4,
+      "initial_stock": 165
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 5,
+    "fields": {
+      "name": "Product 5",
+      "sku": "SKU005",
+      "category": 9,
+      "unit": 14,
+      "initial_stock": 68
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 6,
+    "fields": {
+      "name": "Product 6",
+      "sku": "SKU006",
+      "category": 3,
+      "unit": 16,
+      "initial_stock": 51
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 7,
+    "fields": {
+      "name": "Product 7",
+      "sku": "SKU007",
+      "category": 12,
+      "unit": 3,
+      "initial_stock": 167
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 8,
+    "fields": {
+      "name": "Product 8",
+      "sku": "SKU008",
+      "category": 2,
+      "unit": 6,
+      "initial_stock": 195
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 9,
+    "fields": {
+      "name": "Product 9",
+      "sku": "SKU009",
+      "category": 2,
+      "unit": 4,
+      "initial_stock": 145
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 10,
+    "fields": {
+      "name": "Product 10",
+      "sku": "SKU010",
+      "category": 16,
+      "unit": 19,
+      "initial_stock": 169
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 11,
+    "fields": {
+      "name": "Product 11",
+      "sku": "SKU011",
+      "category": 6,
+      "unit": 9,
+      "initial_stock": 138
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 12,
+    "fields": {
+      "name": "Product 12",
+      "sku": "SKU012",
+      "category": 11,
+      "unit": 9,
+      "initial_stock": 76
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 13,
+    "fields": {
+      "name": "Product 13",
+      "sku": "SKU013",
+      "category": 13,
+      "unit": 2,
+      "initial_stock": 178
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 14,
+    "fields": {
+      "name": "Product 14",
+      "sku": "SKU014",
+      "category": 8,
+      "unit": 13,
+      "initial_stock": 131
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 15,
+    "fields": {
+      "name": "Product 15",
+      "sku": "SKU015",
+      "category": 3,
+      "unit": 14,
+      "initial_stock": 177
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 16,
+    "fields": {
+      "name": "Product 16",
+      "sku": "SKU016",
+      "category": 18,
+      "unit": 14,
+      "initial_stock": 91
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 17,
+    "fields": {
+      "name": "Product 17",
+      "sku": "SKU017",
+      "category": 16,
+      "unit": 15,
+      "initial_stock": 110
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 18,
+    "fields": {
+      "name": "Product 18",
+      "sku": "SKU018",
+      "category": 6,
+      "unit": 15,
+      "initial_stock": 96
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 19,
+    "fields": {
+      "name": "Product 19",
+      "sku": "SKU019",
+      "category": 13,
+      "unit": 3,
+      "initial_stock": 50
+    }
+  },
+  {
+    "model": "api.product",
+    "pk": 20,
+    "fields": {
+      "name": "Product 20",
+      "sku": "SKU020",
+      "category": 12,
+      "unit": 15,
+      "initial_stock": 112
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 1,
+    "fields": {
+      "name": "Supplier 1",
+      "email": "supplier1@test.com",
+      "phone": "9000000001"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 2,
+    "fields": {
+      "name": "Supplier 2",
+      "email": "supplier2@test.com",
+      "phone": "9000000002"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 3,
+    "fields": {
+      "name": "Supplier 3",
+      "email": "supplier3@test.com",
+      "phone": "9000000003"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 4,
+    "fields": {
+      "name": "Supplier 4",
+      "email": "supplier4@test.com",
+      "phone": "9000000004"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 5,
+    "fields": {
+      "name": "Supplier 5",
+      "email": "supplier5@test.com",
+      "phone": "9000000005"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 6,
+    "fields": {
+      "name": "Supplier 6",
+      "email": "supplier6@test.com",
+      "phone": "9000000006"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 7,
+    "fields": {
+      "name": "Supplier 7",
+      "email": "supplier7@test.com",
+      "phone": "9000000007"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 8,
+    "fields": {
+      "name": "Supplier 8",
+      "email": "supplier8@test.com",
+      "phone": "9000000008"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 9,
+    "fields": {
+      "name": "Supplier 9",
+      "email": "supplier9@test.com",
+      "phone": "9000000009"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 10,
+    "fields": {
+      "name": "Supplier 10",
+      "email": "supplier10@test.com",
+      "phone": "9000000010"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 11,
+    "fields": {
+      "name": "Supplier 11",
+      "email": "supplier11@test.com",
+      "phone": "9000000011"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 12,
+    "fields": {
+      "name": "Supplier 12",
+      "email": "supplier12@test.com",
+      "phone": "9000000012"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 13,
+    "fields": {
+      "name": "Supplier 13",
+      "email": "supplier13@test.com",
+      "phone": "9000000013"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 14,
+    "fields": {
+      "name": "Supplier 14",
+      "email": "supplier14@test.com",
+      "phone": "9000000014"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 15,
+    "fields": {
+      "name": "Supplier 15",
+      "email": "supplier15@test.com",
+      "phone": "9000000015"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 16,
+    "fields": {
+      "name": "Supplier 16",
+      "email": "supplier16@test.com",
+      "phone": "9000000016"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 17,
+    "fields": {
+      "name": "Supplier 17",
+      "email": "supplier17@test.com",
+      "phone": "9000000017"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 18,
+    "fields": {
+      "name": "Supplier 18",
+      "email": "supplier18@test.com",
+      "phone": "9000000018"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 19,
+    "fields": {
+      "name": "Supplier 19",
+      "email": "supplier19@test.com",
+      "phone": "9000000019"
+    }
+  },
+  {
+    "model": "api.supplier",
+    "pk": 20,
+    "fields": {
+      "name": "Supplier 20",
+      "email": "supplier20@test.com",
+      "phone": "9000000020"
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 1,
+    "fields": {
+      "product": 11,
+      "location": 18,
+      "quantity": 37
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 2,
+    "fields": {
+      "product": 11,
+      "location": 8,
+      "quantity": 153
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 3,
+    "fields": {
+      "product": 2,
+      "location": 1,
+      "quantity": 113
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 4,
+    "fields": {
+      "product": 16,
+      "location": 12,
+      "quantity": 76
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 5,
+    "fields": {
+      "product": 12,
+      "location": 19,
+      "quantity": 168
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 6,
+    "fields": {
+      "product": 7,
+      "location": 10,
+      "quantity": 107
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 7,
+    "fields": {
+      "product": 11,
+      "location": 6,
+      "quantity": 129
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 8,
+    "fields": {
+      "product": 8,
+      "location": 6,
+      "quantity": 190
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 9,
+    "fields": {
+      "product": 12,
+      "location": 14,
+      "quantity": 75
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 10,
+    "fields": {
+      "product": 10,
+      "location": 1,
+      "quantity": 162
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 11,
+    "fields": {
+      "product": 8,
+      "location": 11,
+      "quantity": 83
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 12,
+    "fields": {
+      "product": 14,
+      "location": 3,
+      "quantity": 144
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 13,
+    "fields": {
+      "product": 4,
+      "location": 10,
+      "quantity": 16
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 14,
+    "fields": {
+      "product": 19,
+      "location": 15,
+      "quantity": 173
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 15,
+    "fields": {
+      "product": 9,
+      "location": 11,
+      "quantity": 42
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 16,
+    "fields": {
+      "product": 11,
+      "location": 20,
+      "quantity": 141
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 17,
+    "fields": {
+      "product": 14,
+      "location": 20,
+      "quantity": 80
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 18,
+    "fields": {
+      "product": 19,
+      "location": 13,
+      "quantity": 187
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 19,
+    "fields": {
+      "product": 20,
+      "location": 4,
+      "quantity": 117
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 20,
+    "fields": {
+      "product": 14,
+      "location": 5,
+      "quantity": 81
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 1,
+    "fields": {
+      "supplier": 3,
+      "warehouse": 12,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 2,
+    "fields": {
+      "supplier": 8,
+      "warehouse": 4,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 3,
+    "fields": {
+      "supplier": 20,
+      "warehouse": 20,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 4,
+    "fields": {
+      "supplier": 19,
+      "warehouse": 5,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 5,
+    "fields": {
+      "supplier": 3,
+      "warehouse": 9,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 6,
+    "fields": {
+      "supplier": 15,
+      "warehouse": 4,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 7,
+    "fields": {
+      "supplier": 19,
+      "warehouse": 1,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 8,
+    "fields": {
+      "supplier": 1,
+      "warehouse": 3,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 9,
+    "fields": {
+      "supplier": 10,
+      "warehouse": 5,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 10,
+    "fields": {
+      "supplier": 1,
+      "warehouse": 11,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 11,
+    "fields": {
+      "supplier": 6,
+      "warehouse": 17,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 12,
+    "fields": {
+      "supplier": 2,
+      "warehouse": 8,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 13,
+    "fields": {
+      "supplier": 9,
+      "warehouse": 17,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 14,
+    "fields": {
+      "supplier": 5,
+      "warehouse": 6,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 15,
+    "fields": {
+      "supplier": 14,
+      "warehouse": 19,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 16,
+    "fields": {
+      "supplier": 7,
+      "warehouse": 1,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 17,
+    "fields": {
+      "supplier": 14,
+      "warehouse": 19,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 18,
+    "fields": {
+      "supplier": 5,
+      "warehouse": 5,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 19,
+    "fields": {
+      "supplier": 19,
+      "warehouse": 7,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receipt",
+    "pk": 20,
+    "fields": {
+      "supplier": 10,
+      "warehouse": 2,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 1,
+    "fields": {
+      "receipt": 14,
+      "product": 8,
+      "quantity": 17
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 2,
+    "fields": {
+      "receipt": 8,
+      "product": 17,
+      "quantity": 44
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 3,
+    "fields": {
+      "receipt": 1,
+      "product": 15,
+      "quantity": 21
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 4,
+    "fields": {
+      "receipt": 7,
+      "product": 5,
+      "quantity": 49
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 5,
+    "fields": {
+      "receipt": 9,
+      "product": 12,
+      "quantity": 26
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 6,
+    "fields": {
+      "receipt": 7,
+      "product": 11,
+      "quantity": 43
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 7,
+    "fields": {
+      "receipt": 16,
+      "product": 8,
+      "quantity": 29
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 8,
+    "fields": {
+      "receipt": 17,
+      "product": 19,
+      "quantity": 40
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 9,
+    "fields": {
+      "receipt": 5,
+      "product": 20,
+      "quantity": 28
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 10,
+    "fields": {
+      "receipt": 1,
+      "product": 14,
+      "quantity": 36
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 11,
+    "fields": {
+      "receipt": 16,
+      "product": 11,
+      "quantity": 14
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 12,
+    "fields": {
+      "receipt": 3,
+      "product": 3,
+      "quantity": 19
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 13,
+    "fields": {
+      "receipt": 6,
+      "product": 8,
+      "quantity": 13
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 14,
+    "fields": {
+      "receipt": 20,
+      "product": 9,
+      "quantity": 37
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 15,
+    "fields": {
+      "receipt": 12,
+      "product": 13,
+      "quantity": 38
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 16,
+    "fields": {
+      "receipt": 16,
+      "product": 17,
+      "quantity": 6
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 17,
+    "fields": {
+      "receipt": 9,
+      "product": 15,
+      "quantity": 9
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 18,
+    "fields": {
+      "receipt": 10,
+      "product": 18,
+      "quantity": 23
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 19,
+    "fields": {
+      "receipt": 8,
+      "product": 8,
+      "quantity": 24
+    }
+  },
+  {
+    "model": "api.receiptitem",
+    "pk": 20,
+    "fields": {
+      "receipt": 16,
+      "product": 12,
+      "quantity": 48
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 1,
+    "fields": {
+      "customer_name": "Customer 1",
+      "warehouse": 2,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 2,
+    "fields": {
+      "customer_name": "Customer 2",
+      "warehouse": 9,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 3,
+    "fields": {
+      "customer_name": "Customer 3",
+      "warehouse": 16,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 4,
+    "fields": {
+      "customer_name": "Customer 4",
+      "warehouse": 17,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 5,
+    "fields": {
+      "customer_name": "Customer 5",
+      "warehouse": 14,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 6,
+    "fields": {
+      "customer_name": "Customer 6",
+      "warehouse": 1,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 7,
+    "fields": {
+      "customer_name": "Customer 7",
+      "warehouse": 18,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 8,
+    "fields": {
+      "customer_name": "Customer 8",
+      "warehouse": 16,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 9,
+    "fields": {
+      "customer_name": "Customer 9",
+      "warehouse": 1,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 10,
+    "fields": {
+      "customer_name": "Customer 10",
+      "warehouse": 12,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 11,
+    "fields": {
+      "customer_name": "Customer 11",
+      "warehouse": 10,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 12,
+    "fields": {
+      "customer_name": "Customer 12",
+      "warehouse": 4,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 13,
+    "fields": {
+      "customer_name": "Customer 13",
+      "warehouse": 16,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 14,
+    "fields": {
+      "customer_name": "Customer 14",
+      "warehouse": 13,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 15,
+    "fields": {
+      "customer_name": "Customer 15",
+      "warehouse": 9,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 16,
+    "fields": {
+      "customer_name": "Customer 16",
+      "warehouse": 19,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 17,
+    "fields": {
+      "customer_name": "Customer 17",
+      "warehouse": 2,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 18,
+    "fields": {
+      "customer_name": "Customer 18",
+      "warehouse": 3,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 19,
+    "fields": {
+      "customer_name": "Customer 19",
+      "warehouse": 1,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryorder",
+    "pk": 20,
+    "fields": {
+      "customer_name": "Customer 20",
+      "warehouse": 10,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 1,
+    "fields": {
+      "delivery": 10,
+      "product": 8,
+      "quantity": 5
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 2,
+    "fields": {
+      "delivery": 12,
+      "product": 18,
+      "quantity": 8
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 3,
+    "fields": {
+      "delivery": 4,
+      "product": 15,
+      "quantity": 16
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 4,
+    "fields": {
+      "delivery": 14,
+      "product": 17,
+      "quantity": 4
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 5,
+    "fields": {
+      "delivery": 13,
+      "product": 16,
+      "quantity": 20
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 6,
+    "fields": {
+      "delivery": 2,
+      "product": 4,
+      "quantity": 11
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 7,
+    "fields": {
+      "delivery": 1,
+      "product": 12,
+      "quantity": 16
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 8,
+    "fields": {
+      "delivery": 19,
+      "product": 15,
+      "quantity": 8
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 9,
+    "fields": {
+      "delivery": 5,
+      "product": 5,
+      "quantity": 3
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 10,
+    "fields": {
+      "delivery": 10,
+      "product": 19,
+      "quantity": 10
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 11,
+    "fields": {
+      "delivery": 18,
+      "product": 15,
+      "quantity": 3
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 12,
+    "fields": {
+      "delivery": 5,
+      "product": 4,
+      "quantity": 8
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 13,
+    "fields": {
+      "delivery": 1,
+      "product": 3,
+      "quantity": 9
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 14,
+    "fields": {
+      "delivery": 10,
+      "product": 11,
+      "quantity": 12
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 15,
+    "fields": {
+      "delivery": 17,
+      "product": 19,
+      "quantity": 18
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 16,
+    "fields": {
+      "delivery": 5,
+      "product": 5,
+      "quantity": 14
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 17,
+    "fields": {
+      "delivery": 7,
+      "product": 10,
+      "quantity": 4
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 18,
+    "fields": {
+      "delivery": 20,
+      "product": 19,
+      "quantity": 1
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 19,
+    "fields": {
+      "delivery": 4,
+      "product": 1,
+      "quantity": 7
+    }
+  },
+  {
+    "model": "api.deliveryitem",
+    "pk": 20,
+    "fields": {
+      "delivery": 3,
+      "product": 7,
+      "quantity": 2
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 1,
+    "fields": {
+      "from_location": 7,
+      "to_location": 12,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 2,
+    "fields": {
+      "from_location": 14,
+      "to_location": 19,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 3,
+    "fields": {
+      "from_location": 10,
+      "to_location": 20,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 4,
+    "fields": {
+      "from_location": 5,
+      "to_location": 20,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 5,
+    "fields": {
+      "from_location": 16,
+      "to_location": 14,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 6,
+    "fields": {
+      "from_location": 18,
+      "to_location": 12,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 7,
+    "fields": {
+      "from_location": 19,
+      "to_location": 14,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 8,
+    "fields": {
+      "from_location": 13,
+      "to_location": 15,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 9,
+    "fields": {
+      "from_location": 4,
+      "to_location": 6,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 10,
+    "fields": {
+      "from_location": 8,
+      "to_location": 16,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 11,
+    "fields": {
+      "from_location": 18,
+      "to_location": 10,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 12,
+    "fields": {
+      "from_location": 13,
+      "to_location": 18,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 13,
+    "fields": {
+      "from_location": 11,
+      "to_location": 4,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 14,
+    "fields": {
+      "from_location": 16,
+      "to_location": 1,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 15,
+    "fields": {
+      "from_location": 6,
+      "to_location": 8,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 16,
+    "fields": {
+      "from_location": 19,
+      "to_location": 10,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 17,
+    "fields": {
+      "from_location": 2,
+      "to_location": 12,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 18,
+    "fields": {
+      "from_location": 13,
+      "to_location": 12,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 19,
+    "fields": {
+      "from_location": 10,
+      "to_location": 9,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.internaltransfer",
+    "pk": 20,
+    "fields": {
+      "from_location": 19,
+      "to_location": 3,
+      "created_by": null,
+      "status": "draft",
+      "created_at": "2026-01-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 1,
+    "fields": {
+      "transfer": 11,
+      "product": 3,
+      "quantity": 7
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 2,
+    "fields": {
+      "transfer": 11,
+      "product": 19,
+      "quantity": 8
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 3,
+    "fields": {
+      "transfer": 17,
+      "product": 13,
+      "quantity": 5
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 4,
+    "fields": {
+      "transfer": 16,
+      "product": 14,
+      "quantity": 13
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 5,
+    "fields": {
+      "transfer": 18,
+      "product": 16,
+      "quantity": 14
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 6,
+    "fields": {
+      "transfer": 14,
+      "product": 9,
+      "quantity": 18
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 7,
+    "fields": {
+      "transfer": 20,
+      "product": 19,
+      "quantity": 16
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 8,
+    "fields": {
+      "transfer": 5,
+      "product": 15,
+      "quantity": 12
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 9,
+    "fields": {
+      "transfer": 9,
+      "product": 16,
+      "quantity": 3
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 10,
+    "fields": {
+      "transfer": 12,
+      "product": 8,
+      "quantity": 1
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 11,
+    "fields": {
+      "transfer": 7,
+      "product": 9,
+      "quantity": 5
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 12,
+    "fields": {
+      "transfer": 5,
+      "product": 17,
+      "quantity": 18
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 13,
+    "fields": {
+      "transfer": 4,
+      "product": 17,
+      "quantity": 10
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 14,
+    "fields": {
+      "transfer": 20,
+      "product": 2,
+      "quantity": 3
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 15,
+    "fields": {
+      "transfer": 14,
+      "product": 9,
+      "quantity": 15
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 16,
+    "fields": {
+      "transfer": 19,
+      "product": 16,
+      "quantity": 18
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 17,
+    "fields": {
+      "transfer": 18,
+      "product": 16,
+      "quantity": 7
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 18,
+    "fields": {
+      "transfer": 4,
+      "product": 1,
+      "quantity": 14
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 19,
+    "fields": {
+      "transfer": 3,
+      "product": 12,
+      "quantity": 9
+    }
+  },
+  {
+    "model": "api.transferitem",
+    "pk": 20,
+    "fields": {
+      "transfer": 5,
+      "product": 13,
+      "quantity": 1
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 1,
+    "fields": {
+      "product": 6,
+      "location": 15,
+      "recorded_quantity": 37,
+      "counted_quantity": 40,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 2,
+    "fields": {
+      "product": 19,
+      "location": 9,
+      "recorded_quantity": 20,
+      "counted_quantity": 17,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 3,
+    "fields": {
+      "product": 13,
+      "location": 11,
+      "recorded_quantity": 34,
+      "counted_quantity": 36,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 4,
+    "fields": {
+      "product": 13,
+      "location": 20,
+      "recorded_quantity": 63,
+      "counted_quantity": 66,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 5,
+    "fields": {
+      "product": 20,
+      "location": 2,
+      "recorded_quantity": 67,
+      "counted_quantity": 70,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 6,
+    "fields": {
+      "product": 12,
+      "location": 16,
+      "recorded_quantity": 72,
+      "counted_quantity": 77,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 7,
+    "fields": {
+      "product": 8,
+      "location": 3,
+      "recorded_quantity": 44,
+      "counted_quantity": 42,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 8,
+    "fields": {
+      "product": 5,
+      "location": 18,
+      "recorded_quantity": 58,
+      "counted_quantity": 54,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 9,
+    "fields": {
+      "product": 10,
+      "location": 19,
+      "recorded_quantity": 61,
+      "counted_quantity": 58,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 10,
+    "fields": {
+      "product": 15,
+      "location": 18,
+      "recorded_quantity": 16,
+      "counted_quantity": 14,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 11,
+    "fields": {
+      "product": 11,
+      "location": 16,
+      "recorded_quantity": 36,
+      "counted_quantity": 41,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 12,
+    "fields": {
+      "product": 12,
+      "location": 16,
+      "recorded_quantity": 80,
+      "counted_quantity": 77,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 13,
+    "fields": {
+      "product": 18,
+      "location": 18,
+      "recorded_quantity": 92,
+      "counted_quantity": 90,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 14,
+    "fields": {
+      "product": 17,
+      "location": 14,
+      "recorded_quantity": 66,
+      "counted_quantity": 70,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 15,
+    "fields": {
+      "product": 20,
+      "location": 12,
+      "recorded_quantity": 85,
+      "counted_quantity": 80,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 16,
+    "fields": {
+      "product": 16,
+      "location": 16,
+      "recorded_quantity": 13,
+      "counted_quantity": 11,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 17,
+    "fields": {
+      "product": 12,
+      "location": 10,
+      "recorded_quantity": 73,
+      "counted_quantity": 71,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 18,
+    "fields": {
+      "product": 13,
+      "location": 9,
+      "recorded_quantity": 36,
+      "counted_quantity": 40,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 19,
+    "fields": {
+      "product": 1,
+      "location": 1,
+      "recorded_quantity": 64,
+      "counted_quantity": 64,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.inventoryadjustment",
+    "pk": 20,
+    "fields": {
+      "product": 8,
+      "location": 18,
+      "recorded_quantity": 53,
+      "counted_quantity": 52,
+      "reason": "Stock check",
+      "adjusted_by": null,
+      "created_at": "2026-01-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 1,
+    "fields": {
+      "product": 9,
+      "location": 17,
+      "quantity_change": 15,
+      "move_type": "receipt",
+      "reference_id": 4,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 2,
+    "fields": {
+      "product": 6,
+      "location": 7,
+      "quantity_change": -3,
+      "move_type": "receipt",
+      "reference_id": 13,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 3,
+    "fields": {
+      "product": 20,
+      "location": 16,
+      "quantity_change": -8,
+      "move_type": "transfer",
+      "reference_id": 18,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 4,
+    "fields": {
+      "product": 13,
+      "location": 10,
+      "quantity_change": -5,
+      "move_type": "receipt",
+      "reference_id": 6,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 5,
+    "fields": {
+      "product": 5,
+      "location": 16,
+      "quantity_change": 3,
+      "move_type": "transfer",
+      "reference_id": 18,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 6,
+    "fields": {
+      "product": 11,
+      "location": 5,
+      "quantity_change": 19,
+      "move_type": "delivery",
+      "reference_id": 1,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 7,
+    "fields": {
+      "product": 16,
+      "location": 8,
+      "quantity_change": 7,
+      "move_type": "delivery",
+      "reference_id": 3,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 8,
+    "fields": {
+      "product": 8,
+      "location": 10,
+      "quantity_change": 3,
+      "move_type": "transfer",
+      "reference_id": 15,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 9,
+    "fields": {
+      "product": 5,
+      "location": 4,
+      "quantity_change": -9,
+      "move_type": "transfer",
+      "reference_id": 16,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 10,
+    "fields": {
+      "product": 15,
+      "location": 9,
+      "quantity_change": 18,
+      "move_type": "transfer",
+      "reference_id": 8,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 11,
+    "fields": {
+      "product": 15,
+      "location": 7,
+      "quantity_change": 14,
+      "move_type": "transfer",
+      "reference_id": 12,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 12,
+    "fields": {
+      "product": 8,
+      "location": 5,
+      "quantity_change": 13,
+      "move_type": "delivery",
+      "reference_id": 11,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 13,
+    "fields": {
+      "product": 4,
+      "location": 10,
+      "quantity_change": 19,
+      "move_type": "adjustment",
+      "reference_id": 11,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 14,
+    "fields": {
+      "product": 5,
+      "location": 1,
+      "quantity_change": 3,
+      "move_type": "transfer",
+      "reference_id": 2,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 15,
+    "fields": {
+      "product": 4,
+      "location": 13,
+      "quantity_change": 6,
+      "move_type": "receipt",
+      "reference_id": 15,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 16,
+    "fields": {
+      "product": 7,
+      "location": 6,
+      "quantity_change": 1,
+      "move_type": "transfer",
+      "reference_id": 20,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 17,
+    "fields": {
+      "product": 6,
+      "location": 9,
+      "quantity_change": 0,
+      "move_type": "delivery",
+      "reference_id": 5,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 18,
+    "fields": {
+      "product": 3,
+      "location": 4,
+      "quantity_change": 5,
+      "move_type": "receipt",
+      "reference_id": 12,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 19,
+    "fields": {
+      "product": 16,
+      "location": 7,
+      "quantity_change": -1,
+      "move_type": "receipt",
+      "reference_id": 2,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "api.stockmove",
+    "pk": 20,
+    "fields": {
+      "product": 10,
+      "location": 11,
+      "quantity_change": -1,
+      "move_type": "delivery",
+      "reference_id": 13,
+      "created_at": "2026-01-05T10:00:00Z"
+    }
+  }
+]

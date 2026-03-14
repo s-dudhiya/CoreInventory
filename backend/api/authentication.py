@@ -6,7 +6,8 @@ def enforce_csrf(request):
     """
     Enforce CSRF validation for session-like authentication.
     """
-    check = CSRFCheck()
+    # CSRFCheck expects a get_response callable
+    check = CSRFCheck(get_response=lambda r: None)
     check.process_request(request)
     reason = check.process_view(request, None, (), {})
     if reason:
@@ -25,6 +26,15 @@ class CustomJWTAuthentication(JWTAuthentication):
         if raw_token is None:
             return super().authenticate(request)
             
-        validated_token = self.get_validated_token(raw_token)
-        enforce_csrf(request)
-        return self.get_user(validated_token), validated_token
+        try:
+            validated_token = self.get_validated_token(raw_token)
+            
+            # Only enforce CSRF for unsafe methods (POST, PUT, DELETE, etc.)
+            if request.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
+                enforce_csrf(request)
+                
+            return self.get_user(validated_token), validated_token
+        except Exception:
+            # If cookie authentication fails, we don't return 500.
+            # We return None so it can fallback to other methods or return 401 via permission_classes
+            return None

@@ -72,7 +72,7 @@ export default function LoginPage() {
         >
           <div className="mb-8 lg:hidden flex items-center gap-2">
             <Box className="h-6 w-6 text-primary" />
-            <span className="text-lg font-semibold text-foreground">CoreInventory</span>
+            <span className="text-lg font-semibold text-foreground">Stockora</span>
           </div>
 
           <h2 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h2>

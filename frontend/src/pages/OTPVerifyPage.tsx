@@ -27,7 +27,7 @@ export default function OTPVerifyPage() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm text-center">
         <div className="mb-8 flex items-center justify-center gap-2">
           <Box className="h-6 w-6 text-primary" />
-          <span className="text-lg font-semibold text-foreground">CoreInventory</span>
+          <span className="text-lg font-semibold text-foreground">Stockora</span>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-foreground">Verify OTP</h2>
         <p className="mt-1 text-sm text-muted-foreground">Enter the 6-digit code sent to your email</p>

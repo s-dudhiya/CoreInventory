@@ -3,7 +3,7 @@ import { Save, User } from "lucide-react";
 
 export default function ProfilePage() {
   const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("john.doe@coreinventory.com");
+  const [email, setEmail] = useState("john.doe@stockora.com");
   const role = "Warehouse Manager";
 
   return (

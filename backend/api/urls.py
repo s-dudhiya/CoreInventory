@@ -6,6 +6,7 @@ from .views import (
     UserProfileView,
     RequestPasswordResetOTPView,
     VerifyOTPAndResetPasswordView,
+    DashboardKPIView,
 )
 
 urlpatterns = [
@@ -15,4 +16,6 @@ urlpatterns = [
     path('auth/me/', UserProfileView.as_view(), name='auth_me'),
     path('auth/password-reset/request/', RequestPasswordResetOTPView.as_view(), name='auth_request_password_reset'),
     path('auth/password-reset/verify/', VerifyOTPAndResetPasswordView.as_view(), name='auth_verify_password_reset'),
+    
+    path('dashboard/', DashboardKPIView.as_view(), name='dashboard_kpis'),
 ]

@@ -6,13 +6,17 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Sum, Count, F
 from .serializers import (
     RegisterSerializer,
     RequestOTPResetSerializer,
     VerifyOTPAndResetPasswordSerializer,
     UserSerializer
 )
-from .models import OTP, generate_otp
+from .models import (
+    OTP, generate_otp, Product, Receipt, 
+    DeliveryOrder, InternalTransfer, Stock, Warehouse, StockMove
+)
 
 def set_jwt_cookies(response, user):
     refresh = RefreshToken.for_user(user)
@@ -91,14 +95,18 @@ class RequestPasswordResetOTPView(APIView):
                 code = generate_otp()
                 OTP.objects.create(user=user, code=code)
                 
-                # Send email (prints to console initially due to settings)
-                send_mail(
-                    'CoreInventory - Your Password Reset OTP',
-                    f'Your OTP for password reset is: {code}\nThis code will expire in 10 minutes.',
-                    settings.DEFAULT_FROM_EMAIL or 'noreply@coreinventory.com',
-                    [email],
-                    fail_silently=False,
-                )
+                # Send email
+                try:
+                    send_mail(
+                        'Stockora - Your Password Reset OTP',
+                        f'Your OTP for password reset is: {code}\nThis code will expire in 10 minutes.',
+                        settings.DEFAULT_FROM_EMAIL or 'noreply@stockora.com',
+                        [email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    print(f"Error sending email: {e}")
+                    return Response({"error": "Failed to send reset email. Please try again later."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             # Always return 200 to prevent email enumeration
             return Response({"message": "If an account with that email exists, an OTP has been sent."}, status=status.HTTP_200_OK)
@@ -131,3 +139,69 @@ class VerifyOTPAndResetPasswordView(APIView):
             
             return Response({"message": "Password reset successfully!"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DashboardKPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Top-line KPI Counts
+        total_products = Product.objects.count()
+        
+        # Calculate exactly how many stocks are < 15 per location
+        low_stock_items = Stock.objects.filter(quantity__lt=15).count()
+        
+        # Pending activity
+        pending_receipts = Receipt.objects.exclude(status__in=['done', 'cancel']).count()
+        pending_deliveries = DeliveryOrder.objects.exclude(status__in=['done', 'cancel']).count()
+        internal_transfers = InternalTransfer.objects.exclude(status__in=['done', 'cancel']).count()
+
+        # Stock Levels by Category (for Recharts BarChart)
+        categories = Stock.objects.values(category_name=F('product__category__name')).annotate(total_stock=Sum('quantity'))
+        bar_data = [
+            {"category": item['category_name'] or 'Uncategorized', "stock": item['total_stock'] or 0} 
+            for item in categories
+        ]
+
+        # Warehouse Distribution (for Recharts PieChart)
+        warehouse_stats = Stock.objects.values(warehouse_name=F('location__warehouse__name')).annotate(total_stock=Sum('quantity'))
+        
+        total_quantity = sum(item['total_stock'] or 0 for item in warehouse_stats)
+        
+        pie_data = []
+        for item in warehouse_stats:
+            stock = item['total_stock'] or 0
+            if total_quantity > 0:
+                percentage = round((stock / total_quantity) * 100)
+                pie_data.append({
+                    "name": item['warehouse_name'] or 'Unknown',
+                    "value": percentage
+                })
+
+        # Recent Activity
+        recent_moves = StockMove.objects.select_related('product', 'location').order_by('-created_at')[:5]
+        activity_data = []
+        for move in recent_moves:
+            activity_data.append({
+                "id": f"MOV-{move.id:03d}",
+                "product": move.product.name,
+                "location": f"{move.location.name} ({move.location.warehouse.name})",
+                "qty": f"{'+' if move.quantity_change > 0 else ''}{move.quantity_change}",
+                "type": move.get_move_type_display(),
+                "status": "done", # StockMove entries are typically finalized moves
+                "date": move.created_at.strftime("%Y-%m-%d")
+            })
+
+        return Response({
+            "kpi": {
+                "total_products": total_products,
+                "low_stock_items": low_stock_items,
+                "pending_receipts": pending_receipts,
+                "pending_deliveries": pending_deliveries,
+                "internal_transfers": internal_transfers
+            },
+            "charts": {
+                "bar_data": bar_data,
+                "pie_data": pie_data
+            },
+            "recent_activity": activity_data
+        }, status=status.HTTP_200_OK)

@@ -37,6 +37,16 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function RoleRoute({ allowedRoles, children }: { allowedRoles: string[], children: React.ReactNode }) {
+  const { user } = useAuth();
+  
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -56,10 +66,24 @@ const App = () => (
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/operations" element={<OperationsPage />} />
-            <Route path="/warehouses" element={<WarehousesPage />} />
+            <Route 
+              path="/warehouses" 
+              element={
+                <RoleRoute allowedRoles={['inventory_manager']}>
+                  <WarehousesPage />
+                </RoleRoute>
+              } 
+            />
             <Route path="/adjustments" element={<AdjustmentsPage />} />
             <Route path="/moves" element={<MoveHistoryPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route 
+              path="/settings" 
+              element={
+                <RoleRoute allowedRoles={['inventory_manager']}>
+                  <SettingsPage />
+                </RoleRoute>
+              } 
+            />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
 

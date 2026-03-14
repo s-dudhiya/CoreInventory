@@ -1,48 +1,66 @@
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import { Package, AlertTriangle, TruckIcon, ArrowRightLeft, ClipboardList } from "lucide-react";
 import { KPICard } from "@/components/KPICard";
 import { StatusBadge } from "@/components/StatusBadge";
 import { DataTable } from "@/components/DataTable";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
-const barData = [
-  { category: "Electronics", stock: 420 },
-  { category: "Furniture", stock: 280 },
-  { category: "Raw Materials", stock: 650 },
-  { category: "Packaging", stock: 190 },
-  { category: "Tools", stock: 340 },
-];
+const PIE_COLORS = ["hsl(239, 84%, 59%)", "hsl(187, 92%, 43%)", "hsl(160, 84%, 39%)", "hsl(280, 84%, 39%)", "hsl(30, 84%, 39%)"];
 
-const pieData = [
-  { name: "Main Warehouse", value: 45 },
-  { name: "Production", value: 30 },
-  { name: "Storage", value: 25 },
-];
-
-const PIE_COLORS = ["hsl(239, 84%, 59%)", "hsl(187, 92%, 43%)", "hsl(160, 84%, 39%)"];
-
-const recentActivity = [
-  { id: "MOV-001", product: "Steel Bolts M8", location: "Main Warehouse", qty: "+500", type: "Receipt", status: "done" as const, date: "2026-03-14" },
-  { id: "MOV-002", product: "Office Chair Pro", location: "Storage B", qty: "-25", type: "Delivery", status: "ready" as const, date: "2026-03-14" },
-  { id: "MOV-003", product: "Copper Wire 2mm", location: "Production", qty: "+200", type: "Transfer", status: "waiting" as const, date: "2026-03-13" },
-  { id: "MOV-004", product: "Packing Tape", location: "Main Warehouse", qty: "-15", type: "Adjustment", status: "done" as const, date: "2026-03-13" },
-  { id: "MOV-005", product: "LED Panel 60x60", location: "Storage A", qty: "+100", type: "Receipt", status: "draft" as const, date: "2026-03-12" },
-];
+import { useAuth } from "@/lib/AuthContext";
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["dashboard-data"],
+    queryFn: async () => {
+      const response = await api.get("/dashboard/");
+      return response.data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-12 w-48 bg-muted rounded" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-32 bg-muted rounded-xl border border-border" />
+          ))}
+        </div>
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2 h-[320px] bg-muted rounded-xl border border-border" />
+          <div className="h-[320px] bg-muted rounded-xl border border-border" />
+        </div>
+        <div className="h-64 bg-muted rounded-xl border border-border" />
+      </div>
+    );
+  }
+
+  const kpi = data?.kpi || {};
+  const charts = data?.charts || {};
+  const recentActivity = data?.recent_activity || [];
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Overview of your inventory operations</p>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          Welcome back, {user?.first_name || 'User'} 
+          <span className="text-muted-foreground font-normal ml-2">
+            ({user?.role === 'inventory_manager' ? 'Inventory Manager' : 'Warehouse Staff'})
+          </span>
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">Overview of your inventory operations</p>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <KPICard title="Total Products" value="1,284" trend="+12%" trendUp icon={Package} progress={78} />
-        <KPICard title="Low Stock Items" value="12" trend="-4%" trendUp={false} icon={AlertTriangle} progress={15} progressColor="bg-warning" />
-        <KPICard title="Pending Receipts" value="8" icon={TruckIcon} progress={45} progressColor="bg-secondary" />
-        <KPICard title="Pending Deliveries" value="23" icon={TruckIcon} progress={62} />
-        <KPICard title="Internal Transfers" value="5" icon={ArrowRightLeft} progress={30} progressColor="bg-success" />
+        <KPICard title="Total Products" value={kpi.total_products?.toString() || "0"} icon={Package} progress={100} />
+        <KPICard title="Low Stock Items" value={kpi.low_stock_items?.toString() || "0"} icon={AlertTriangle} progress={kpi.low_stock_items > 0 ? 100 : 0} progressColor="bg-warning" />
+        <KPICard title="Pending Receipts" value={kpi.pending_receipts?.toString() || "0"} icon={TruckIcon} progress={100} progressColor="bg-secondary" />
+        <KPICard title="Pending Deliveries" value={kpi.pending_deliveries?.toString() || "0"} icon={TruckIcon} progress={100} />
+        <KPICard title="Internal Transfers" value={kpi.internal_transfers?.toString() || "0"} icon={ArrowRightLeft} progress={100} progressColor="bg-success" />
       </div>
 
       {/* Charts */}
@@ -50,7 +68,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 rounded-xl border border-border bg-card p-5 shadow-sm">
           <h3 className="mb-4 text-sm font-semibold text-foreground">Stock Levels by Category</h3>
           <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={barData}>
+            <BarChart data={charts.bar_data || []}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 32%, 91%)" />
               <XAxis dataKey="category" tick={{ fontSize: 12, fill: "hsl(215, 16%, 47%)" }} />
               <YAxis tick={{ fontSize: 12, fill: "hsl(215, 16%, 47%)" }} />
@@ -64,18 +82,18 @@ export default function DashboardPage() {
           <h3 className="mb-4 text-sm font-semibold text-foreground">Warehouse Distribution</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" stroke="none">
-                {pieData.map((_, i) => (
-                  <Cell key={i} fill={PIE_COLORS[i]} />
+              <Pie data={charts.pie_data || []} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" stroke="none">
+                {(charts.pie_data || []).map((_, i) => (
+                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid hsl(214, 32%, 91%)", fontSize: 12 }} />
             </PieChart>
           </ResponsiveContainer>
           <div className="mt-2 space-y-1">
-            {pieData.map((d, i) => (
+            {(charts.pie_data || []).map((d, i) => (
               <div key={d.name} className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: PIE_COLORS[i] }} />
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
                 {d.name} ({d.value}%)
               </div>
             ))}

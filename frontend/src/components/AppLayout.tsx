@@ -7,7 +7,7 @@ export function AppLayout() {
     <div className="min-h-screen bg-background">
       <AppSidebar />
       <div className="ml-[240px] flex flex-col transition-all duration-300">
-        <AppHeader breadcrumbs={[{ label: "CoreInventory", active: true }]} />
+        <AppHeader breadcrumbs={[{ label: "Stockora", active: true }]} />
         <main className="flex-1 p-6">
           <div className="mx-auto max-w-[1400px]">
             <Outlet />

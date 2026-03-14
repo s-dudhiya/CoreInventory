@@ -159,4 +159,4 @@ EMAIL_USE_TLS = True
 # Replace these with real credentials via env variables ideally
 EMAIL_HOST_USER = 'storix.core@gmail.com'
 EMAIL_HOST_PASSWORD = 'urse agmg hxfs xngd'
-DEFAULT_FROM_EMAIL = 'CoreInventory <storix.core@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Stockora <storix.core@gmail.com>'

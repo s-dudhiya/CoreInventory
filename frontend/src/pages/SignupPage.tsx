@@ -73,10 +73,10 @@ export default function SignupPage() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="mb-8 flex items-center gap-2">
           <Box className="h-6 w-6 text-primary" />
-          <span className="text-lg font-semibold text-foreground">CoreInventory</span>
+          <span className="text-lg font-semibold text-foreground">Stockora</span>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-foreground">Create your account</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Get started with CoreInventory</p>
+        <p className="mt-1 text-sm text-muted-foreground">Get started with Stockora</p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           {[
