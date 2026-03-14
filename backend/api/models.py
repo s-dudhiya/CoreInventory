@@ -272,3 +272,16 @@ class OTP(models.Model):
 
 def generate_otp():
     return ''.join(random.choices(string.digits, k=6))
+
+class SystemSetting(models.Model):
+    low_stock_threshold = models.IntegerField(default=50)
+    auto_assign_location = models.BooleanField(default=True)
+    enable_multi_warehouse_transfers = models.BooleanField(default=True)
+    require_approval_for_adjustments = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "System Settings"
+
+    class Meta:
+        verbose_name = "System Setting"
+        verbose_name_plural = "System Settings"

@@ -16,14 +16,14 @@ export default function AdjustmentsPage() {
 
   const { data: adjustments = [], isLoading } = useQuery({
     queryKey: ["adjustments"],
-    queryFn: async () => (await api.get("/adjustments/")).data,
+    queryFn: async () => (await api.get("adjustments/")).data,
   });
 
-  const { data: products = [] } = useQuery({ queryKey: ["products"], queryFn: async () => (await api.get("/products/")).data });
-  const { data: locations = [] } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("/locations/")).data });
+  const { data: products = [] } = useQuery({ queryKey: ["products"], queryFn: async () => (await api.get("products/")).data });
+  const { data: locations = [] } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("locations/")).data });
 
   const addMutation = useMutation({
-    mutationFn: (data: any) => api.post("/adjustments/", data),
+    mutationFn: (data: any) => api.post("adjustments/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adjustments"] });
       toast.success("Adjustment applied");

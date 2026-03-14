@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if user is already logged in on mount
     const fetchUser = async () => {
       try {
-        const response = await api.get('/auth/me/');
+        const response = await api.get('auth/me/');
         setUser(response.data);
       } catch (error) {
         setUser(null);
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await api.post('/auth/logout/');
+      await api.post('auth/logout/');
     } catch (e) {
       console.error("Logout failed", e);
     }

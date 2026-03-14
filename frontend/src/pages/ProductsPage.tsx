@@ -59,7 +59,7 @@ export default function ProductsPage() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const resp = await api.get("/products/");
+      const resp = await api.get("products/");
       return resp.data;
     },
   });
@@ -67,7 +67,7 @@ export default function ProductsPage() {
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const resp = await api.get("/categories/");
+      const resp = await api.get("categories/");
       return resp.data;
     },
   });
@@ -75,14 +75,14 @@ export default function ProductsPage() {
   const { data: units = [] } = useQuery({
     queryKey: ["units"],
     queryFn: async () => {
-      const resp = await api.get("/units/");
+      const resp = await api.get("units/");
       return resp.data;
     },
   });
 
   // Mutations
   const addMutation = useMutation({
-    mutationFn: (newProd: any) => api.post("/products/", newProd),
+    mutationFn: (newProd: any) => api.post("products/", newProd),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Product added successfully");
@@ -93,7 +93,7 @@ export default function ProductsPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => api.delete(`/products/${id}/`),
+    mutationFn: (id: number) => api.delete(`products/${id}/`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Product deleted");
@@ -102,7 +102,7 @@ export default function ProductsPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number, data: any }) => api.patch(`/products/${id}/`, data),
+    mutationFn: ({ id, data }: { id: number, data: any }) => api.patch(`products/${id}/`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Product updated");

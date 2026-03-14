@@ -7,8 +7,13 @@ from .models import (
     UserProfile, Category, UnitOfMeasure, Warehouse, 
     Location, Product, Stock, Receipt, ReceiptItem,
     DeliveryOrder, DeliveryItem, InternalTransfer, TransferItem,
-    Supplier, StockMove, InventoryAdjustment
+    Supplier, StockMove, InventoryAdjustment, SystemSetting
 )
+
+class SystemSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SystemSetting
+        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
@@ -16,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role']
+        read_only_fields = ['username', 'role', 'email']
 
     def get_role(self, obj):
         if hasattr(obj, 'profile'):

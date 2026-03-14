@@ -25,26 +25,26 @@ export default function OperationsPage() {
   // Data Fetching
   const { data: receipts = [], isLoading: loadingRec } = useQuery({
     queryKey: ["receipts"],
-    queryFn: async () => (await api.get("/receipts/")).data,
+    queryFn: async () => (await api.get("receipts/")).data,
   });
 
   const { data: deliveries = [], isLoading: loadingDel } = useQuery({
     queryKey: ["deliveries"],
-    queryFn: async () => (await api.get("/deliveries/")).data,
+    queryFn: async () => (await api.get("deliveries/")).data,
   });
 
   const { data: transfers = [], isLoading: loadingTrf } = useQuery({
     queryKey: ["transfers"],
-    queryFn: async () => (await api.get("/transfers/")).data,
+    queryFn: async () => (await api.get("transfers/")).data,
   });
 
-  const { data: suppliers = [] } = useQuery({ queryKey: ["suppliers"], queryFn: async () => (await api.get("/suppliers/")).data });
-  const { data: warehouses = [] } = useQuery({ queryKey: ["warehouses"], queryFn: async () => (await api.get("/warehouses/")).data });
-  const { data: locations = [] } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("/locations/")).data });
+  const { data: suppliers = [] } = useQuery({ queryKey: ["suppliers"], queryFn: async () => (await api.get("suppliers/")).data });
+  const { data: warehouses = [] } = useQuery({ queryKey: ["warehouses"], queryFn: async () => (await api.get("warehouses/")).data });
+  const { data: locations = [] } = useQuery({ queryKey: ["locations"], queryFn: async () => (await api.get("locations/")).data });
 
   // Mutations
   const createReceipt = useMutation({
-    mutationFn: (data: any) => api.post("/receipts/", data),
+    mutationFn: (data: any) => api.post("receipts/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["receipts"] });
       toast.success("Receipt created");
@@ -53,7 +53,7 @@ export default function OperationsPage() {
   });
 
   const createDelivery = useMutation({
-    mutationFn: (data: any) => api.post("/deliveries/", data),
+    mutationFn: (data: any) => api.post("deliveries/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["deliveries"] });
       toast.success("Delivery created");
@@ -62,7 +62,7 @@ export default function OperationsPage() {
   });
 
   const createTransfer = useMutation({
-    mutationFn: (data: any) => api.post("/transfers/", data),
+    mutationFn: (data: any) => api.post("transfers/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transfers"] });
       toast.success("Transfer created");

@@ -13,7 +13,7 @@ export default function MoveHistoryPage() {
 
   const { data: moves = [], isLoading } = useQuery({
     queryKey: ["moves"],
-    queryFn: async () => (await api.get("/moves/")).data,
+    queryFn: async () => (await api.get("moves/")).data,
   });
 
   const filtered = filter === "All" ? moves : moves.filter((m: any) => m.move_type_display === filter);

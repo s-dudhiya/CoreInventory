@@ -18,12 +18,14 @@ from .serializers import (
     WarehouseSerializer, LocationSerializer, ProductSerializer,
     StockSerializer, SupplierSerializer, ReceiptSerializer,
     DeliveryOrderSerializer, InternalTransferSerializer,
-    StockMoveSerializer, InventoryAdjustmentSerializer
+    StockMoveSerializer, InventoryAdjustmentSerializer,
+    SystemSettingSerializer
 )
 from .models import (
     OTP, generate_otp, Product, Receipt, 
     DeliveryOrder, InternalTransfer, Stock, Warehouse, StockMove,
-    Category, UnitOfMeasure, Location, Supplier, InventoryAdjustment
+    Category, UnitOfMeasure, Location, Supplier, InventoryAdjustment,
+    SystemSetting
 )
 
 def set_jwt_cookies(response, user):
@@ -87,6 +89,15 @@ class UserProfileView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print("Profile Update Errors:", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RequestPasswordResetOTPView(APIView):
     permission_classes = [AllowAny]
@@ -400,6 +411,18 @@ class InventoryAdjustmentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(adjusted_by=self.request.user)
+
+class SystemSettingViewSet(viewsets.ModelViewSet):
+    queryset = SystemSetting.objects.all()
+    serializer_class = SystemSettingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        obj, created = SystemSetting.objects.get_or_create(id=1)
+        return obj
+
+    def list(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
 
 

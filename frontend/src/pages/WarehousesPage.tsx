@@ -16,13 +16,13 @@ export default function WarehousesPage() {
   const { data: warehouses = [], isLoading } = useQuery({
     queryKey: ["warehouses"],
     queryFn: async () => {
-      const resp = await api.get("/warehouses/");
+      const resp = await api.get("warehouses/");
       return resp.data;
     },
   });
 
   const addMutation = useMutation({
-    mutationFn: (newWh: any) => api.post("/warehouses/", newWh),
+    mutationFn: (newWh: any) => api.post("warehouses/", newWh),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
       toast.success("Warehouse added successfully");
@@ -33,7 +33,7 @@ export default function WarehousesPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => api.delete(`/warehouses/${id}/`),
+    mutationFn: (id: number) => api.delete(`warehouses/${id}/`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
       toast.success("Warehouse deleted");
